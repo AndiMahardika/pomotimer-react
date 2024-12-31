@@ -7,6 +7,10 @@ export default {
   ],
   theme: {
   	extend: {
+			fontFamily: {
+				inter: ["Inter", "sans-serif"],
+				roboto: ["Roboto", "sans-serif"],
+			},
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
