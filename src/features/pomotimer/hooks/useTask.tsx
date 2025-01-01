@@ -6,6 +6,7 @@ export default function useTask() {
   const [tasks, setTasks] = useState<Tasks[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [isAdding, setIsAdding] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
 
   // Add Task
   const handleAddTask = async (e: React.FormEvent) => {
@@ -19,9 +20,6 @@ export default function useTask() {
         .from('task')
         .insert({task})
 
-      if (data) {
-        setTasks((prevTask) => [data[0] as Tasks, ...prevTask])
-      }
     } catch (error) {
       console.error("Error adding task:", error); 
     } finally {
@@ -40,7 +38,7 @@ export default function useTask() {
       if (error) {
         throw error;
       }
-      setTasks(task)
+      setTasks(task || [])
     } catch (error) {
       console.error("Error fetching tasks:", error);
     } finally {
@@ -58,7 +56,14 @@ export default function useTask() {
         "postgres_changes",
         { event: "*", schema: "public", table: "task" },
         (payload) => {
-          setTasks((prevTask) => [payload.new as Tasks, ...prevTask]);
+          if (payload.eventType === "INSERT") {
+            setTasks((prevTask) => [...prevTask, payload.new as Tasks]);
+          }
+          if (payload.eventType === "DELETE") {
+            setTasks((prevTask) =>
+              prevTask.filter((task) => task.id !== payload.old.id)
+            );
+          }
         }
       )
       .subscribe();
@@ -67,7 +72,35 @@ export default function useTask() {
     return () => {
       supabase.removeChannel(channel);
     };
-  },[])
+  }, [])
 
-  return { handleAddTask, isAdding, tasks, isLoading }
+  // Delete Task
+  const handleDeleteTask = async (id: number) => {
+    try {
+      setIsDeleting(true);
+      const confirm = window.confirm("Are you sure you want to delete this task?");
+  
+      if (!confirm) {
+        return;
+      }
+  
+      // Hapus task dari Supabase
+      const { error } = await supabase
+        .from('task')
+        .delete()
+        .eq('id', id);
+  
+      if (error) {
+        throw error;
+      }
+  
+      console.log("Success delete task id", id);
+    } catch (error) {
+      console.error("Error deleting task:", error);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  return { handleAddTask, isAdding, tasks, isLoading, handleDeleteTask, isDeleting }
 }
