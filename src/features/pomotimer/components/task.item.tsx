@@ -13,13 +13,13 @@ interface TaskProps {
 }
 
 export default function TaskItem({data, loading, handleDeleteTask} : TaskProps) {
-  const [dataTask, setDataTask] = useState<Tasks>({})
   const [isChecked, setIsChecked] = useState<boolean>(data.is_selected);
-  const { setTaskStore } = useTaskStore()
+  const { selectTask } = useTaskStore();
 
   const handleSelectTask = async (id: number, currentSelected: boolean) => {
     try {
       setIsChecked(!currentSelected)
+      console.log(currentSelected)
 
       const { data, error } = await supabase
         .from('task')
@@ -31,9 +31,10 @@ export default function TaskItem({data, loading, handleDeleteTask} : TaskProps) 
         throw error;
       }
 
-      if(data && !isChecked){
-        setDataTask(data[0])
-        setTaskStore(data[0]?.duration)
+      if(!currentSelected){
+        selectTask(id)
+      } else {
+        selectTask(null)
       }
 
     } catch (error) {
