@@ -1,15 +1,11 @@
 import { Button } from "@/components/ui/button";
 import useTaskStore from "@/store/taskStore";
-import useTimerStore from "@/store/useTimer";
-import { console } from "inspector";
 import { ChevronsRight, Play, RotateCcw } from "lucide-react";
-import { useEffect } from "react";
 import useSetting from "../hooks/useSetting";
 
 export default function Timer() {
   const { selectedTaskId } = useTaskStore();
   const { workduration } = useSetting();
-  // const { workduration, shortbreakduration, longbreakduration } = useTimerStore();
 
   return (
     <div className="border-2 border-slate-300 rounded-md p-4 h-4/6 flex flex-col items-center justify-center space-y-9">

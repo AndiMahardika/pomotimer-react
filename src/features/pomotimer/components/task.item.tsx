@@ -4,52 +4,86 @@ import useTaskStore from "@/store/taskStore";
 import { Tasks } from "@/utils/entity";
 import { supabase } from "@/utils/supabase";
 import { Loader2, Trash2 } from "lucide-react";
-import { useState } from "react";
 
 interface TaskProps {
   data: Tasks;
-  loading?: boolean
-  handleDeleteTask?: () => void
+  loading?: boolean;
+  handleDeleteTask?: () => void;
 }
 
-export default function TaskItem({data, loading, handleDeleteTask} : TaskProps) {
-  const [isChecked, setIsChecked] = useState<boolean>(data.is_selected);
-  const { selectTask } = useTaskStore();
+export default function TaskItem({ data, loading, handleDeleteTask }: TaskProps) {
+  const { selectTask, tasks, setTasks } = useTaskStore();
 
   const handleSelectTask = async (id: number, currentSelected: boolean) => {
     try {
-      setIsChecked(!currentSelected)
-      console.log(currentSelected)
+      if (currentSelected) {
+        // Unselect current task
+        const { error } = await supabase
+          .from("task")
+          .update({ is_selected: false })
+          .eq("id", id);
 
-      const { data, error } = await supabase
-        .from('task')
-        .update({is_selected: !currentSelected})
-        .eq('id', id)
-        .select()
+        if (error) throw error;
 
-      if (error) {
-        throw error;
-      }
+        const updatedTasks = tasks.map((task) =>
+          task.id === id ? { ...task, is_selected: false } : task
+        );
 
-      if(!currentSelected){
-        selectTask(id)
+        setTasks(updatedTasks);
+        selectTask(null);
       } else {
-        selectTask(null)
-      }
+        // Unselect tasks local storage
+        const updatedTasks = tasks.map((task) =>
+          task.id === id
+            ? { ...task, is_selected: true }
+            : { ...task, is_selected: false }
+        );
 
+        // Unselect tasks in Supabase
+        const taskIds = tasks.map((task) => task.id);
+        const { error: unselectError } = await supabase
+          .from("task")
+          .update({ is_selected: false })
+          .in("id", taskIds);
+
+        if (unselectError) throw unselectError;
+
+        // Select task in Supabase
+        const { error: selectError } = await supabase
+          .from("task")
+          .update({ is_selected: true })
+          .eq("id", id);
+
+        if (selectError) throw selectError;
+
+        setTasks(updatedTasks);
+        selectTask(id);
+      }
     } catch (error) {
-      console.error("Error deleting task:", error);
+      console.error("Error:", error);
     }
-  }
+  };
 
   return (
     <div className="flex items-center justify-between rounded-md py-1 px-2 bg-white font-semibold text-slate-900">
       <p className="">{data.task}</p>
       <div className="flex items-center gap-x-2">
         <p className="text-sm">{data.pomo_count} Pomos</p>
-        <Checkbox checked={isChecked} onCheckedChange={() => handleSelectTask(data.id, isChecked)} />
-        <Button size={"icon"} variant={"destructive"} disabled={loading} onClick={handleDeleteTask}>
-          {loading ? <Loader2 className="animate-spin" size={24} /> : <Trash2 size={24} />}
+        <Checkbox
+          checked={data.is_selected}
+          onCheckedChange={() => handleSelectTask(data.id, data.is_selected)}
+        />
+        <Button
+          size={"icon"}
+          variant={"destructive"}
+          disabled={loading}
+          onClick={handleDeleteTask}
+        >
+          {loading ? (
+            <Loader2 className="animate-spin" size={24} />
+          ) : (
+            <Trash2 size={24} />
+          )}
         </Button>
       </div>
     </div>

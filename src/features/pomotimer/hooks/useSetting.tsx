@@ -1,26 +1,47 @@
+import useSettingStore from "@/store/useSettingStore";
 import { supabase } from "@/utils/supabase";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 export default function useSetting() {
-  const [workduration, setWorkduration] = useState(1500);
+  const {
+    workduration,
+    shortbreakduration,
+    longbreakduration,
+    timerSound,
+    setAllSettings,
+  } = useSettingStore();
 
-  const fetchingSettings = async () => {
+  const fetchSettings = async () => {
     try {
       const { data, error } = await supabase
-        .from('settings')
-        .select('*')
+        .from("settings")
+        .select("*")
         .single();
-      
-      console.log(data)
-      setWorkduration(data.work_duration)
+
+      if (error) throw error;
+
+      if (data) {
+        setAllSettings({
+          workduration: data.work_duration,
+          shortbreakduration: data.short_break_duration,
+          longbreakduration: data.long_break_duration,
+          timerSound: data.timer_sound,
+        });
+      }
     } catch (error) {
-      console.error('Error fetching tasks:', error);
+      console.error("Error fetching settings:", error);
     }
-  }
+  };
 
   useEffect(() => {
-    fetchingSettings()
-  }, [])
+    fetchSettings();
+  }, []);
 
-  return { fetchingSettings, workduration } 
+  return {
+    workduration,
+    shortbreakduration,
+    longbreakduration,
+    timerSound,
+    fetchSettings,
+  };
 }
