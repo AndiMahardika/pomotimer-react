@@ -6,10 +6,12 @@ interface SettingStore {
   shortbreakduration: number;
   longbreakduration: number;
   timerSound: string | null;
+  isRunning: boolean;
   setWorkduration: (workduration: number) => void;
   setShortbreakduration: (shortbreakduration: number) => void;
   setLongbreakduration: (longbreakduration: number) => void;
   setTimerSound: (timerSound: string | null) => void;
+  setIsRunning: (isRunning: boolean) => void;
   setAllSettings: (settings: {
     workduration: number;
     shortbreakduration: number;
@@ -21,14 +23,16 @@ interface SettingStore {
 const useSettingStore = create<SettingStore>()(
   persist(
     (set) => ({
-      workduration: 25,
-      shortbreakduration: 5,
-      longbreakduration: 15,
+      workduration: 1500,
+      shortbreakduration: 300,
+      longbreakduration: 900,
       timerSound: null,
+      isRunning: false,
       setWorkduration: (workduration) => set({ workduration }),
       setShortbreakduration: (shortbreakduration) => set({ shortbreakduration }),
       setLongbreakduration: (longbreakduration) => set({ longbreakduration }),
       setTimerSound: (timerSound) => set({ timerSound }),
+      setIsRunning: (isRunning) => set({ isRunning }),
       setAllSettings: (settings) => set({ ...settings }),
     }),
     {

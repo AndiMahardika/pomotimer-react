@@ -1,32 +1,62 @@
 import { Button } from "@/components/ui/button";
-import useTaskStore from "@/store/taskStore";
-import { ChevronsRight, Play, RotateCcw } from "lucide-react";
+import { ChevronsRight, Pause, Play, RotateCcw } from "lucide-react";
 import useSetting from "../hooks/useSetting";
+import { useEffect, useState } from "react";
 
 export default function Timer() {
-  const { selectedTaskId } = useTaskStore();
-  const { workduration } = useSetting();
+  const { workduration, shortbreakduration } = useSetting();
+  const [currentDuration, setCurrentDuration] = useState(workduration);
+  const [workSession, setWorkSession] = useState(true);
+  const [isRunning, setIsRunning] = useState(false);
+
+  const handleReset = () => {
+    setCurrentDuration(workSession ? workduration : shortbreakduration);
+    setIsRunning(false);
+  };
+
+  const handleStartPause = () => {
+    setIsRunning(!isRunning);
+  };
+
+  useEffect(() => {
+    if (isRunning) {
+      const timer = setTimeout(() => {
+        setCurrentDuration((prev) => prev - 1);
+      }, 1000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isRunning, currentDuration]);
+
+  useEffect(() => {
+    if (currentDuration === 0) {
+      setWorkSession(!workSession);
+      setCurrentDuration(workSession ? shortbreakduration : workduration);
+    }
+  }, [currentDuration, workSession, workduration, shortbreakduration]);
 
   return (
     <div className="border-2 border-slate-300 rounded-md p-4 h-4/6 flex flex-col items-center justify-center space-y-9">
       <p className="text-2xl font-bold text-center text-slate-300">
-        Work Session {selectedTaskId}
+        {workSession ? "Work Session" : "Break Session"}
       </p>
       <p className="text-9xl font-extrabold text-center text-slate-300">
-        {Math.floor(workduration / 60)}:{workduration % 60}
+        {`${String(Math.floor(currentDuration / 60)).padStart(2, "0")}:${String(currentDuration % 60).padStart(2, "0")}`}
       </p>
       <div className="flex justify-center gap-x-4">
         <Button
           size={"icon"}
           className="bg-slate-300 hover:bg-slate-400 hover:text-white text-slate-900"
+          onClick={handleReset}
         >
           <RotateCcw size={24} />
         </Button>
         <Button
           size={"icon"}
           className="bg-slate-300 hover:bg-slate-400 hover:text-white text-slate-900"
+          onClick={handleStartPause}
         >
-          <Play size={24} />
+          {isRunning ? <Pause size={24} /> : <Play size={24} />}
         </Button>
         <Button
           size={"icon"}
