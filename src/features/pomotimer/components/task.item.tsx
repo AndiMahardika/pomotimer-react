@@ -1,9 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import useTaskStore from "@/store/taskStore";
+import useSelectedTaskStore from "@/store/useSelectedTask";
 import { Tasks } from "@/utils/entity";
 import { supabase } from "@/utils/supabase";
 import { Loader2, Trash2 } from "lucide-react";
+import useSetting from "../hooks/useSetting";
 
 interface TaskProps {
   data: Tasks;
@@ -13,6 +15,9 @@ interface TaskProps {
 
 export default function TaskItem({ data, loading, handleDeleteTask }: TaskProps) {
   const { selectTask, tasks, setTasks } = useTaskStore();
+  const { workduration } = useSetting()
+  // const { setSelectedTask, setUpdatedTask }  = useSelectedTaskStore();
+  const { setSelectedTask, setCurrentDuration, setWorkSession, setIsRunning } = useSelectedTaskStore();
 
   const handleSelectTask = async (id: number, currentSelected: boolean) => {
     try {
@@ -30,6 +35,9 @@ export default function TaskItem({ data, loading, handleDeleteTask }: TaskProps)
         );
 
         setTasks(updatedTasks);
+        setSelectedTask(null)
+        setCurrentDuration(workduration)
+        setIsRunning(false)
         selectTask(null);
       } else {
         // Unselect tasks local storage
@@ -49,12 +57,21 @@ export default function TaskItem({ data, loading, handleDeleteTask }: TaskProps)
         if (unselectError) throw unselectError;
 
         // Select task in Supabase
-        const { error: selectError } = await supabase
+        const { data: dataSelectedTask, error: selectError } = await supabase
           .from("task")
           .update({ is_selected: true })
-          .eq("id", id);
+          .eq("id", id)
+          .select("*")
+          .single();
 
         if (selectError) throw selectError;
+
+        if (dataSelectedTask) {
+          setSelectedTask(dataSelectedTask);
+          setCurrentDuration(workduration);
+          setWorkSession(dataSelectedTask.workSession ?? true);
+          setIsRunning(false);
+        }
 
         setTasks(updatedTasks);
         selectTask(id);

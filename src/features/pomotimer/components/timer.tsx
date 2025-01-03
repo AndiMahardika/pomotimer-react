@@ -1,13 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { ChevronsRight, Pause, Play, RotateCcw } from "lucide-react";
 import useSetting from "../hooks/useSetting";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import useSelectedTaskStore from "@/store/useSelectedTask";
 
 export default function Timer() {
   const { workduration, shortbreakduration } = useSetting();
-  const [currentDuration, setCurrentDuration] = useState(workduration);
-  const [workSession, setWorkSession] = useState(true);
-  const [isRunning, setIsRunning] = useState(false);
+  // const [currentDuration, setCurrentDuration] = useState(workduration);
+  // const [workSession, setWorkSession] = useState(true);
+  const { currentDuration, setCurrentDuration, workSession, setWorkSession, isRunning, setIsRunning } = useSelectedTaskStore();
+  // const [isRunning, setIsRunning] = useState(false);
 
   const handleReset = () => {
     setCurrentDuration(workSession ? workduration : shortbreakduration);
@@ -21,19 +23,19 @@ export default function Timer() {
   useEffect(() => {
     if (isRunning) {
       const timer = setTimeout(() => {
-        setCurrentDuration((prev) => prev - 1);
+        setCurrentDuration(currentDuration - 1);
       }, 1000);
 
       return () => clearTimeout(timer);
     }
-  }, [isRunning, currentDuration]);
+  }, [isRunning, currentDuration, setCurrentDuration]);
 
   useEffect(() => {
     if (currentDuration === 0) {
       setWorkSession(!workSession);
       setCurrentDuration(workSession ? shortbreakduration : workduration);
     }
-  }, [currentDuration, workSession, workduration, shortbreakduration]);
+  }, [currentDuration, workSession, workduration, shortbreakduration, setWorkSession, setCurrentDuration]);
 
   return (
     <div className="border-2 border-slate-300 rounded-md p-4 h-4/6 flex flex-col items-center justify-center space-y-9">
