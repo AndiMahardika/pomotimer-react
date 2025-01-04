@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ChevronsRight, Pause, Play, RotateCcw } from "lucide-react";
 import useSetting from "../hooks/useSetting";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useTimerStore from "@/store/useTmerStore";
 import useTaskStore from "@/store/taskStore";
 
@@ -9,26 +9,36 @@ export default function Timer() {
   const { workduration, shortbreakduration } = useSetting();
   const { currentDuration, setCurrentDuration, workSession, setWorkSession, isRunning, setIsRunning } = useTimerStore();
   const { selectedTask } = useTaskStore();
-
+  const [speed, setSpeed] = useState <number>(1);
 
   const handleReset = () => {
     setCurrentDuration(workSession ? workduration : shortbreakduration);
     setIsRunning(false);
+    setWorkSession(true);
+    setSpeed(1);
   };
 
   const handleStartPause = () => {
     setIsRunning(!isRunning);
   };
 
+  const handleFastForward = () => {
+    if ( speed === 3) {
+      setSpeed(1);
+    } else {
+      setSpeed(speed + 1);
+    }
+  };
+
   useEffect(() => {
     if (isRunning) {
       const timer = setTimeout(() => {
         setCurrentDuration(currentDuration - 1);
-      }, 1000);
+      }, 1000 / speed);
 
       return () => clearTimeout(timer);
     }
-  }, [isRunning, currentDuration, setCurrentDuration]);
+  }, [isRunning, currentDuration, setCurrentDuration, speed]);
 
   useEffect(() => {
     if (currentDuration === 0) {
@@ -61,10 +71,18 @@ export default function Timer() {
           {isRunning ? <Pause size={24} /> : <Play size={24} />}
         </Button>
         <Button
-          size={"icon"}
+          size={speed === 1 ? "icon" : "default"}
           className="bg-slate-300 hover:bg-slate-400 hover:text-white text-slate-900"
+          onClick={handleFastForward}
         >
-          <ChevronsRight size={24} />
+          {speed === 1 ? (
+            <ChevronsRight size={24} />) 
+          : (
+            <>
+              {speed}x
+              <ChevronsRight size={24} />
+            </>
+          ) } 
         </Button>
       </div>
     </div>

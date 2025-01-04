@@ -34,11 +34,9 @@ export default function TaskItem({ data, loading, handleDeleteTask }: TaskProps)
         );
 
         setTasks(updatedTasks);
-        // setSelectedTask(null)
         setCurrentDuration(workduration)
         setIsRunning(false)
         unselectTask();
-        // selectTask(null);
       } else {
         // Unselect tasks local storage
         const updatedTasks = tasks.map((task) =>
