@@ -8,28 +8,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useForm } from "react-hook-form";
 import googleIcon from "@/assets/google.svg";
 import AuthLayout from "./auth.layout";
 import { Link } from "react-router-dom";
-import { Hourglass } from "lucide-react";
-
-interface FormValues {
-  email: string;
-  password: string;
-}
+import { Hourglass, Loader2 } from "lucide-react";
+import useSignup from "../hooks/useSignup";
 
 export default function Signup() {
-  const form = useForm<FormValues>({
-    defaultValues: {
-      email: "",
-      password: "",
-    },
-  });
-
-  const onSubmit = (data: FormValues) => {
-    console.log("Form Data:", data);
-  };
+  const { form, loading, onSubmit } = useSignup();
 
   return (
     <AuthLayout>
@@ -54,7 +40,7 @@ export default function Signup() {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="Email" {...field} />
+                    <Input placeholder="Email" {...field} type="email" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -67,14 +53,19 @@ export default function Signup() {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input placeholder="Password" {...field} />
+                    <Input placeholder="Password" {...field} type="password" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
             <Button className="bg-green-500 hover:bg-green-600 w-full" type="submit">
-              Login
+              {loading ? (
+                <>
+                  <Loader2 className="animate-spin" /> 
+                  Loading
+                </>
+              ) : "Signup"}
             </Button>
 
             <div className="relative">

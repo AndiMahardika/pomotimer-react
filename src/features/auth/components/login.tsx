@@ -9,27 +9,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useForm } from "react-hook-form";
 import googleIcon from "@/assets/google.svg";
 import { Link } from "react-router-dom";
-import { Hourglass } from "lucide-react";
-
-interface FormValues {
-  email: string;
-  password: string;
-}
+import { Hourglass, Loader2 } from "lucide-react";
+import useLogin from "../hooks/useLogin";
 
 export default function Login() {
-  const form = useForm<FormValues>({
-    defaultValues: {
-      email: "",
-      password: "",
-    },
-  });
-
-  const onSubmit = (data: FormValues) => {
-    console.log("Form Data:", data);
-  };
+  const { form, loading, onSubmit } = useLogin();
 
   return (
     <AuthLayout>
@@ -71,7 +57,14 @@ export default function Login() {
                 </FormItem>
               )}
             />
-            <Button className="bg-green-500 hover:bg-green-600 w-full" type="submit">Login</Button>
+            <Button className="bg-green-500 hover:bg-green-600 w-full" type="submit">
+              {loading ? (
+                <>
+                  <Loader2 className="animate-spin" /> 
+                  Loading
+                </>
+              ) : "Login"}
+            </Button>
 
             <div className="relative">
               <div className="absolute inset-0 flex items-center">

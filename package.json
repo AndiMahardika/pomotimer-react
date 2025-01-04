@@ -15,6 +15,7 @@
     "@radix-ui/react-label": "^2.1.1",
     "@radix-ui/react-progress": "^1.1.1",
     "@radix-ui/react-slot": "^1.1.1",
+    "@radix-ui/react-toast": "^1.2.4",
     "@supabase/supabase-js": "^2.47.10",
     "axios": "^1.7.9",
     "class-variance-authority": "^0.7.1",
@@ -27,6 +28,7 @@
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.24.1",
+    "zod-validation-error": "^3.4.0",
     "zustand": "^5.0.2"
   },
   "devDependencies": {

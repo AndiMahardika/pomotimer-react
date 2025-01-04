@@ -8,9 +8,16 @@ export default function AppRoutes() {
     <BrowserRouter>
       <Routes>
         {/* <Route path="/" element={<Pomotimer />} /> */}
+        <Route path="/" element={<Test />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
       </Routes>
     </BrowserRouter>
+  )
+}
+
+const Test = () => {
+  return (
+    <h1 className="text-3xl">Success Page</h1>
   )
 }
