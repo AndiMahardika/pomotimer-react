@@ -2,14 +2,14 @@ import { Button } from "@/components/ui/button";
 import { ChevronsRight, Pause, Play, RotateCcw } from "lucide-react";
 import useSetting from "../hooks/useSetting";
 import { useEffect } from "react";
-import useSelectedTaskStore from "@/store/useSelectedTask";
+import useTimerStore from "@/store/useTmerStore";
+import useTaskStore from "@/store/taskStore";
 
 export default function Timer() {
   const { workduration, shortbreakduration } = useSetting();
-  // const [currentDuration, setCurrentDuration] = useState(workduration);
-  // const [workSession, setWorkSession] = useState(true);
-  const { currentDuration, setCurrentDuration, workSession, setWorkSession, isRunning, setIsRunning } = useSelectedTaskStore();
-  // const [isRunning, setIsRunning] = useState(false);
+  const { currentDuration, setCurrentDuration, workSession, setWorkSession, isRunning, setIsRunning } = useTimerStore();
+  const { selectedTask } = useTaskStore();
+
 
   const handleReset = () => {
     setCurrentDuration(workSession ? workduration : shortbreakduration);
@@ -35,7 +35,7 @@ export default function Timer() {
       setWorkSession(!workSession);
       setCurrentDuration(workSession ? shortbreakduration : workduration);
     }
-  }, [currentDuration, workSession, workduration, shortbreakduration, setWorkSession, setCurrentDuration]);
+  }, [currentDuration, workSession, selectedTask, setWorkSession, setCurrentDuration, shortbreakduration, workduration]);  
 
   return (
     <div className="border-2 border-slate-300 rounded-md p-4 h-4/6 flex flex-col items-center justify-center space-y-9">

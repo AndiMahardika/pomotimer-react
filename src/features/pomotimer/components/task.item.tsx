@@ -1,11 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import useTaskStore from "@/store/taskStore";
-import useSelectedTaskStore from "@/store/useSelectedTask";
 import { Tasks } from "@/utils/entity";
 import { supabase } from "@/utils/supabase";
 import { Loader2, Trash2 } from "lucide-react";
 import useSetting from "../hooks/useSetting";
+import useTimerStore from "@/store/useTmerStore";
 
 interface TaskProps {
   data: Tasks;
@@ -14,10 +14,9 @@ interface TaskProps {
 }
 
 export default function TaskItem({ data, loading, handleDeleteTask }: TaskProps) {
-  const { selectTask, tasks, setTasks } = useTaskStore();
+  const { selectTask, tasks, setTasks, unselectTask } = useTaskStore();
   const { workduration } = useSetting()
-  // const { setSelectedTask, setUpdatedTask }  = useSelectedTaskStore();
-  const { setSelectedTask, setCurrentDuration, setWorkSession, setIsRunning } = useSelectedTaskStore();
+  const { setWorkSession, setCurrentDuration, setIsRunning } = useTimerStore()
 
   const handleSelectTask = async (id: number, currentSelected: boolean) => {
     try {
@@ -35,10 +34,11 @@ export default function TaskItem({ data, loading, handleDeleteTask }: TaskProps)
         );
 
         setTasks(updatedTasks);
-        setSelectedTask(null)
+        // setSelectedTask(null)
         setCurrentDuration(workduration)
         setIsRunning(false)
-        selectTask(null);
+        unselectTask();
+        // selectTask(null);
       } else {
         // Unselect tasks local storage
         const updatedTasks = tasks.map((task) =>
@@ -66,15 +66,12 @@ export default function TaskItem({ data, loading, handleDeleteTask }: TaskProps)
 
         if (selectError) throw selectError;
 
-        if (dataSelectedTask) {
-          setSelectedTask(dataSelectedTask);
-          setCurrentDuration(workduration);
-          setWorkSession(dataSelectedTask.workSession ?? true);
-          setIsRunning(false);
-        }
+        setCurrentDuration(workduration);
+        setWorkSession(dataSelectedTask.workSession ?? true);
+        setIsRunning(false);
 
         setTasks(updatedTasks);
-        selectTask(id);
+        selectTask(dataSelectedTask.id);
       }
     } catch (error) {
       console.error("Error:", error);
