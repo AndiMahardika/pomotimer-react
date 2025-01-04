@@ -1,5 +1,6 @@
 import { Hourglass, Timer } from "lucide-react";
 import { Button } from "../ui/button";
+import { Link } from "react-router-dom";
 
 export default function Navbar() {
   return (
@@ -9,7 +10,9 @@ export default function Navbar() {
           <Hourglass size={32} />
           <h1>Pomotimer</h1>
         </div>
-        <Button className="bg-green-500 hover:bg-green-600">Login</Button>
+        <Button className="bg-green-500 hover:bg-green-600">
+          <Link to="/login">Logout</Link>
+        </Button>
       </div>
     </nav>
   )
