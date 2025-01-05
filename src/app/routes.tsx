@@ -1,4 +1,3 @@
-import Navbar from "@/components/share/navbar"
 import Login from "@/features/auth/components/login"
 import Signup from "@/features/auth/components/signup"
 import Pomotimer from "@/features/pomotimer"
@@ -17,15 +16,5 @@ export default function AppRoutes() {
         </Route>
       </Routes>
     </BrowserRouter>
-  )
-}
-
-const Test = () => {
-
-  return (
-    <>
-      <Navbar />
-      <h1 className="text-3xl">Success Page</h1>
-    </>
   )
 }

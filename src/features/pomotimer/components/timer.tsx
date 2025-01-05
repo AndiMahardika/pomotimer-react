@@ -78,7 +78,7 @@ export default function Timer() {
       <p className="text-2xl font-bold text-center text-slate-300">
         {workSession ? "Work Session" : "Break Session"}
       </p>
-      <p className="text-9xl font-extrabold text-center text-slate-300">
+      <p className="text-7xl md:text-9xl font-extrabold text-center text-slate-300">
         {`${String(Math.floor(currentDuration / 60)).padStart(2, "0")}:${String(currentDuration % 60).padStart(2, "0")}`}
       </p>
       <div className="flex justify-center gap-x-4">

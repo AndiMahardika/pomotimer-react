@@ -40,6 +40,8 @@
 
     // Fetch Tasks
     const fetchTasks = async () => {
+      if (!user) return;
+
       try {
         setIsLoading(true);
         const { data, error } = await supabase.from('task')
@@ -103,9 +105,9 @@
 
     // Real-time Listener
     useEffect(() => {
-      // if (user?.id) {
-      //   fetchTasks();
-      // }
+      if (user?.id) {
+        fetchTasks();
+      }
 
       const channel = supabase
         .channel('realtime-task')

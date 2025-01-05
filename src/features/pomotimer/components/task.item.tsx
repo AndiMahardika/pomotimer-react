@@ -80,7 +80,7 @@ export default function TaskItem({ data, loading, handleDeleteTask }: TaskProps)
     <div className="flex items-center justify-between rounded-md py-1 px-2 bg-white font-semibold text-slate-900">
       <p className="">{data.task}</p>
       <div className="flex items-center gap-x-2">
-        <p className="text-sm">{data.pomo_count} Pomos</p>
+        <p className="text-xs md:text-sm">{data.pomo_count} Pomos</p>
         <Checkbox
           checked={data.is_selected}
           onCheckedChange={() => handleSelectTask(data.id, data.is_selected)}

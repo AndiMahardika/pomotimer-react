@@ -53,10 +53,10 @@ export default function TimeProgress() {
 
 
   return (
-    <div className="bg-slate-300 rounded-md px-4 p-6 h-2/6 flex flex-col justify-between text-slate-700">
+    <div className="bg-slate-300 rounded-md px-4 p-4 md:p-6 h-2/6 flex flex-col justify-between text-slate-700">
       <div>
-        <p className="text-3xl font-bold">{selectedTask?.task || "No Task Selected"}</p>
-        <p className="text-lg font-bold">{workSession ? currentPhase : "Break Session"}</p>
+        <p className="text-2xl md:text-3xl font-bold">{selectedTask?.task || "No Task Selected"}</p>
+        <p className="text-base md:text-lg font-bold">{workSession ? currentPhase : "Break Session"}</p>
       </div>
       <div>
         <div className="flex justify-between text-sm">

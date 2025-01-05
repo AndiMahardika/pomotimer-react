@@ -18,7 +18,7 @@ export default function Task() {
             <TaskSkeleton />
           </>
         ) : (tasks.length === 0) ? (
-            <img src={images.addtask} alt="" className="w-80 rounded-md mx-auto my-20" />
+            <img src={images.addtask} alt="" className="w-64 md:w-80 rounded-md mx-auto md:my-20" />
         ) : (
           tasks.map((task) => (
             <TaskItem key={task.id} data={task} loading={isDeleting} handleDeleteTask={() => handleDeleteTask(task.id)} />
