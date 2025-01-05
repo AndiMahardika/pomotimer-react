@@ -2,16 +2,19 @@ import { Hourglass } from "lucide-react";
 import { Button } from "../ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import useAuth from "@/hooks/useAuth";
+import useTaskStore from "@/store/taskStore";
 
 export default function Navbar() {
   const navigate = useNavigate();
   const { logout } = useAuth();
+  const { clearTasks } = useTaskStore();
 
   const handleLogout = async () => {
     const confirm = window.confirm("Are you sure you want to logout?");
 
     if (!confirm) return;
 
+    clearTasks();
     await logout()
     navigate("/login")
   }

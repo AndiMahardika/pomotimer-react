@@ -11,6 +11,7 @@ interface TaskStore {
   setTasks: (tasks: Tasks[]) => void;
   selectTask: (taskId: number) => void;
   unselectTask: () => void;
+  clearTasks: () => void;
 }
 
 const useTaskStore = create<TaskStore>()(
@@ -42,6 +43,7 @@ const useTaskStore = create<TaskStore>()(
           return { selectedTask };
         }),
       unselectTask: () => set({ selectedTask: null }),
+      clearTasks: () => set({ tasks: [] }),
     }),
     {
       name: 'task',

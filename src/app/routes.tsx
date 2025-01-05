@@ -13,7 +13,7 @@ export default function AppRoutes() {
         <Route path="/signup" element={<Signup />} />
 
         <Route element={<ProtectedRoute />}>
-          <Route path="/" element={<Test />} />
+          <Route path="/" element={<Pomotimer />} />
         </Route>
       </Routes>
     </BrowserRouter>
@@ -21,6 +21,7 @@ export default function AppRoutes() {
 }
 
 const Test = () => {
+
   return (
     <>
       <Navbar />

@@ -5,3 +5,10 @@ export interface Tasks {
   is_selected: boolean;
   pomo_count: number;
 }
+
+export interface IUser {
+  id: number;
+  name: string;
+  email: string;
+  created_at: string;
+}

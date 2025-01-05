@@ -2,12 +2,14 @@
   import { supabase } from '@/utils/supabase';
   import useTaskStore from '@/store/taskStore';
   import React, { useEffect, useState } from 'react';
+  import useUserStore from '@/store/useUserStore';
 
   export default function useTask() {
     const [isLoading, setIsLoading] = useState(false);
     const [isAdding, setIsAdding] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const { tasks, addTask, setTasks, deleteTask, updateTask } = useTaskStore();
+    const { user } = useUserStore();
 
     // Add Task
     const handleAddTask = async (e: React.FormEvent) => {
@@ -39,8 +41,11 @@
     // Fetch Tasks
     const fetchTasks = async () => {
       try {
+        console.log("user id fetch Task", user?.id)
         setIsLoading(true);
-        const { data, error } = await supabase.from('task').select('*');
+        const { data, error } = await supabase.from('task')
+          .select('*')
+          .eq('user_id', user?.id);
 
         if (error) throw error;
 
@@ -99,7 +104,9 @@
 
     // Real-time Listener
     useEffect(() => {
-      fetchTasks();
+      if (user?.id) {
+        fetchTasks();
+      }
 
       const channel = supabase
         .channel('realtime-task')
@@ -123,7 +130,7 @@
       return () => {
         supabase.removeChannel(channel);
       };
-    }, []);
+    }, [user?.id]);
 
     return { handleAddTask, isAdding, tasks, isLoading, handleDeleteTask, isDeleting, handlePomosCount };
   }
