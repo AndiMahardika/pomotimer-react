@@ -38,7 +38,7 @@ export default function Login() {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="Email" {...field} />
+                    <Input placeholder="Email" {...field} type="email" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -51,7 +51,7 @@ export default function Login() {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input placeholder="Password" {...field} />
+                    <Input placeholder="Password" {...field} type="password" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

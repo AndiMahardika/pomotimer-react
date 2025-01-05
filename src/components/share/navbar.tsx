@@ -1,8 +1,21 @@
-import { Hourglass, Timer } from "lucide-react";
+import { Hourglass } from "lucide-react";
 import { Button } from "../ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import useAuth from "@/hooks/useAuth";
 
 export default function Navbar() {
+  const navigate = useNavigate();
+  const { logout } = useAuth();
+
+  const handleLogout = async () => {
+    const confirm = window.confirm("Are you sure you want to logout?");
+
+    if (!confirm) return;
+
+    await logout()
+    navigate("/login")
+  }
+
   return (
     <nav className="">
       <div className="max-w-5xl mx-auto flex items-center justify-between p-3">
@@ -10,7 +23,7 @@ export default function Navbar() {
           <Hourglass size={32} />
           <h1>Pomotimer</h1>
         </div>
-        <Button className="bg-green-500 hover:bg-green-600">
+        <Button className="bg-green-500 hover:bg-green-600" onClick={handleLogout}>
           <Link to="/login">Logout</Link>
         </Button>
       </div>

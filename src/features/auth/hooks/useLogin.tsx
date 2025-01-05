@@ -4,8 +4,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { authSchema } from "../validation/auth.validation";
 import { z } from "zod";
-import { supabase } from "@/utils/supabase";
 import { useNavigate } from "react-router-dom";
+import { loginWithEmailPassword } from "../service/api.login";
 
 type FormValues = z.infer<typeof authSchema>;
 
@@ -26,16 +26,13 @@ export default function useLogin() {
     try {
       setLoading(true);
 
-      const { data: user, error } = await supabase.auth.signInWithPassword({
-        email: data.email,
-        password: data.password,
-      });
+      const { data: user, error } = await loginWithEmailPassword(data.email, data.password);
 
       if (error) {
         toast({
           className:
            'fixed top-4 left-0 md:top-4 md:left-1/2 md:transform md:-translate-x-1/2 flex md:max-w-[420px]',
-          title: "Signup failed",
+          title: "Login failed",
           description: `${error.message}`,
           variant: "destructive",
         })
@@ -43,11 +40,11 @@ export default function useLogin() {
         toast({
           className:
            'fixed top-4 left-0 md:top-4 md:left-1/2 md:transform md:-translate-x-1/2 flex md:max-w-[420px] bg-green-500 text-white',
-          title: "Signup successful",
-          description: "Check your email for the confirmation link.",
+          title: "Welcome Back",
+          description: "You have successfully logged in.",
         })
 
-        navigate("/")
+        navigate("/");
       }
 
     } catch (error) {

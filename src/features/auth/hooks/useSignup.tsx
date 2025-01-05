@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { authSchema } from "../validation/auth.validation";
 import { z } from "zod";
-import { supabase } from "@/utils/supabase";
+import { signupWithEmailPassword } from "../service/api.signup";
 
 type FormValues = z.infer<typeof authSchema>;
 
@@ -24,13 +24,7 @@ export default function useSignup() {
     try {
       setLoading(true);
 
-      const { data: user, error } = await supabase.auth.signUp({
-        email: data.email,
-        password: data.password,
-        options: {
-          emailRedirectTo: 'http://localhost:5173/',
-        },
-      });
+      const { data: user, error } = await signupWithEmailPassword(data.email, data.password);
 
       if (error) {
         toast({
@@ -38,6 +32,15 @@ export default function useSignup() {
            'fixed top-4 left-0 md:top-4 md:left-1/2 md:transform md:-translate-x-1/2 flex md:max-w-[420px]',
           title: "Signup failed",
           description: "Something went wrong. Please try again.",
+          variant: "destructive",
+        })
+      } 
+      if (user.user && user.user.identities && user.user.identities.length === 0) {
+        toast({
+          className:
+           'fixed top-4 left-0 md:top-4 md:left-1/2 md:transform md:-translate-x-1/2 flex md:max-w-[420px]',
+          title: "Signup failed",
+          description: "Email Alredy exists.",
           variant: "destructive",
         })
       } else {
