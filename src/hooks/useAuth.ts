@@ -32,5 +32,14 @@ export default function useAuth() {
     setSession(null);
   };
 
-  return { session, loading, logout };
+  const handleLoginWithGoogle = async () => {
+    const {data, error} = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: 'http://localhost:5173'        
+      }
+    })
+  }
+
+  return { session, loading, logout, handleLoginWithGoogle };
 }
