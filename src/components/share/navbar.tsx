@@ -3,11 +3,13 @@ import { Button } from "../ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import useAuth from "@/hooks/useAuth";
 import useTaskStore from "@/store/taskStore";
+import useTimerStore from "@/store/useTmerStore";
 
 export default function Navbar() {
   const navigate = useNavigate();
   const { logout } = useAuth();
   const { clearTasks } = useTaskStore();
+  const { setCurrentDuration, setIsRunning, setWorkSession } = useTimerStore();
 
   const handleLogout = async () => {
     const confirm = window.confirm("Are you sure you want to logout?");
@@ -15,6 +17,9 @@ export default function Navbar() {
     if (!confirm) return;
 
     clearTasks();
+    setCurrentDuration(1500);
+    setIsRunning(false);
+    setWorkSession(true);
     await logout()
     navigate("/login")
   }

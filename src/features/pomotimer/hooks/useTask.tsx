@@ -26,7 +26,7 @@
         setIsAdding(true);
         const { data, error } = await supabase
           .from('task')
-          .insert({ task, is_selected: false, pomo_count: 0 })
+          .insert({ user_id: user?.id, task, is_selected: false, pomo_count: 0 })
           .select()
           .single();
 
@@ -41,7 +41,6 @@
     // Fetch Tasks
     const fetchTasks = async () => {
       try {
-        console.log("user id fetch Task", user?.id)
         setIsLoading(true);
         const { data, error } = await supabase.from('task')
           .select('*')
@@ -104,9 +103,9 @@
 
     // Real-time Listener
     useEffect(() => {
-      if (user?.id) {
-        fetchTasks();
-      }
+      // if (user?.id) {
+      //   fetchTasks();
+      // }
 
       const channel = supabase
         .channel('realtime-task')

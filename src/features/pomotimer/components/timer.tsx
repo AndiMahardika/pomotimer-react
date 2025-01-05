@@ -1,9 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { ChevronsRight, Pause, Play, RotateCcw } from "lucide-react";
 import useSetting from "../hooks/useSetting";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import useTimerStore from "@/store/useTmerStore";
 import useTaskStore from "@/store/taskStore";
+import breakSound from "@/assets/sound/sound-1.mp3";
 
 export default function Timer() {
   const { workduration, shortbreakduration } = useSetting();
@@ -11,15 +12,20 @@ export default function Timer() {
   const { selectedTask } = useTaskStore();
   const [speed, setSpeed] = useState <number>(1);
 
+  const breakAudio = useMemo(() => new Audio(breakSound), []);
+
   const handleReset = () => {
-    setCurrentDuration(workSession ? workduration : shortbreakduration);
+    setCurrentDuration(workduration);
     setIsRunning(false);
     setWorkSession(true);
     setSpeed(1);
+    breakAudio.pause();
+    breakAudio.currentTime = 0;
   };
 
   const handleStartPause = () => {
     setIsRunning(!isRunning);
+    breakAudio.pause();
   };
 
   const handleFastForward = () => {
@@ -44,8 +50,28 @@ export default function Timer() {
     if (currentDuration === 0) {
       setWorkSession(!workSession);
       setCurrentDuration(workSession ? shortbreakduration : workduration);
+      // sound
+      if (workSession) {
+        breakAudio.play();
+      } else {
+        breakAudio.pause(); 
+        breakAudio.currentTime = 0;
+      }
     }
-  }, [currentDuration, workSession, selectedTask, setWorkSession, setCurrentDuration, shortbreakduration, workduration]);  
+  }, [currentDuration, workSession, selectedTask, setWorkSession, setCurrentDuration, shortbreakduration, workduration, breakAudio]);  
+
+  useEffect(() => {
+    const handleAudioEnd = () => {
+      if (!workSession) {
+        breakAudio.play();
+      }
+    };
+
+    breakAudio.addEventListener('ended', handleAudioEnd);
+    return () => {
+      breakAudio.removeEventListener('ended', handleAudioEnd);
+    };
+  }, [breakAudio, workSession]);
 
   return (
     <div className="border-2 border-slate-300 rounded-md p-4 h-4/6 flex flex-col items-center justify-center space-y-9">
