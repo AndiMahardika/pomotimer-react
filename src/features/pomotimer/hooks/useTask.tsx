@@ -116,11 +116,49 @@
       }
     }
 
+    // update task
+    const handleUpdateTask = async (id: number, title: string) => {
+      if (!title) {
+        toast({
+          className:
+           'fixed top-4 left-4 md:top-4 md:left-1/2 md:transform md:-translate-x-1/2 flex md:max-w-[420px] bg-red-500 text-white',
+          title: "Error",
+          description: "Task cannot be empty",
+          variant: "destructive",
+        })
+        return;
+      }
+
+      try {
+        const { data: task, error } = await supabase
+          .from('task')
+          .update({ task: title })
+          .eq('id', id)
+          .select()
+          .single();
+        
+        if (error) throw error;
+
+        if (task) {
+          // Update state lokal
+          updateTask(id, { task: task.task });
+          toast({
+            className:
+           'fixed top-4 left-4 md:top-4 md:left-1/2 md:transform md:-translate-x-1/2 flex md:max-w-[420px] bg-red-500 bg-green-500 text-white',
+            title: "Updated Successfully",
+            description: "Your task has been updated.",
+          })
+        }
+      } catch (error) {
+        console.error('Error updating pomos task:', error);
+      }
+    }
+
     // Real-time Listener
     useEffect(() => {
-      // if (user?.id) {
-      //   fetchTasks();
-      // }
+      if (user?.id) {
+        fetchTasks();
+      }
 
       const channel = supabase
         .channel('realtime-task')
@@ -146,5 +184,5 @@
       };
     }, [user?.id]);
 
-    return { handleAddTask, isAdding, tasks, isLoading, handleDeleteTask, isDeleting, handlePomosCount };
+    return { handleAddTask, isAdding, tasks, isLoading, handleDeleteTask, isDeleting, handlePomosCount, handleUpdateTask };
   }

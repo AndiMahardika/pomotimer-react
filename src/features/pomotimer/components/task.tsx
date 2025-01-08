@@ -5,7 +5,7 @@ import TaskSkeleton from "./task.skeleton";
 import useTask from "../hooks/useTask";
 
 export default function Task() {
-  const { tasks, isLoading, isAdding, handleAddTask, isDeleting, handleDeleteTask  } = useTask()
+  const { tasks, isLoading, isAdding, handleAddTask, isDeleting, handleDeleteTask, handleUpdateTask  } = useTask()
 
   return (
     <div className="col-span-1 bg-slate-700 border-2 border-slate-300 rounded-md overflow-y-scroll">
@@ -21,7 +21,7 @@ export default function Task() {
             <img src={images.addtask} alt="" className="w-64 md:w-80 rounded-md mx-auto md:my-20" />
         ) : (
           tasks.map((task) => (
-            <TaskItem key={task.id} data={task} loading={isDeleting} handleDeleteTask={() => handleDeleteTask(task.id)} />
+            <TaskItem key={task.id} data={task} loading={isDeleting} handleDeleteTask={() => handleDeleteTask(task.id)} handleUpdateTask={(id, title) => handleUpdateTask(id, title)}  />
           ))
         )}
       </section>

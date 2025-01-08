@@ -3,21 +3,33 @@ import { Checkbox } from "@/components/ui/checkbox";
 import useTaskStore from "@/store/taskStore";
 import { Tasks } from "@/utils/entity";
 import { supabase } from "@/utils/supabase";
-import { Loader2, Trash2 } from "lucide-react";
+import { FilePenLine, Loader2, Trash2 } from "lucide-react";
 import useSetting from "../hooks/useSetting";
 import useTimerStore from "@/store/useTmerStore";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
 
 interface TaskProps {
   data: Tasks;
   loading?: boolean;
   handleDeleteTask?: () => void;
+  handleUpdateTask?: (id: number, title: string) => void;
 }
 
-export default function TaskItem({ data, loading, handleDeleteTask }: TaskProps) {
+export default function TaskItem({ data, loading, handleDeleteTask, handleUpdateTask }: TaskProps) {
   const { selectTask, tasks, setTasks, unselectTask } = useTaskStore();
   const { workduration } = useSetting()
   const { setWorkSession, setCurrentDuration, setIsRunning } = useTimerStore()
+
+  const [newTaskTitle, setNewTaskTitle] = useState(data.task);
+
+  const handleSaveChanges = () => {
+    if (handleUpdateTask) {
+      handleUpdateTask(data.id, newTaskTitle);
+    }
+  };
 
   const handleSelectTask = async (id: number, currentSelected: boolean) => {
     try {
@@ -80,12 +92,39 @@ export default function TaskItem({ data, loading, handleDeleteTask }: TaskProps)
   return (
     <div className="flex items-center justify-between rounded-md py-1 px-2 bg-white font-semibold text-slate-900">
       <p className="">{data.task}</p>
-      <div className="flex items-center gap-x-2">
+      <div className="flex items-center gap-x-1">
         <p className="text-xs md:text-sm">{data.pomo_count} Pomos</p>
         <Checkbox
           checked={data.is_selected}
           onCheckedChange={() => handleSelectTask(data.id, data.is_selected)}
         />
+
+        {/* Edit */}
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button size={"icon"} className="bg-slate-700 hover:bg-slate-800">
+              { loading ? <Loader2 className="animate-spin" /> : <FilePenLine /> }
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Edit Task</DialogTitle>
+              <DialogDescription>
+                Update the details of your task below. Once you're finished, click save to apply the changes.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="">
+              <Input id="task" value={newTaskTitle} onChange={(e) => setNewTaskTitle(e.target.value)} className="col-span-3" autoComplete="off" />
+            </div>
+            <DialogFooter>
+            <DialogTrigger asChild>
+              <Button type="submit" size={"sm"} onClick={handleSaveChanges}>Save changes</Button>
+            </DialogTrigger>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Delete */}
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <Button size={"icon"} variant={"destructive"}>
