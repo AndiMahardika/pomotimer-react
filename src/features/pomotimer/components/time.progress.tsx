@@ -4,23 +4,7 @@ import useSetting from "../hooks/useSetting";
 import useTask from "../hooks/useTask";
 import useTaskStore from "@/store/taskStore";
 import useTimerStore from "@/store/useTmerStore";
-
-// Fungsi untuk mengonversi angka ke nama fase
-function getPhaseName(phaseNumber: number): string {
-  const phases = [
-    "First",
-    "Second",
-    "Third",
-    "Fourth",
-    "Fifth",
-    "Sixth",
-    "Seventh",
-    "Eighth",
-    "Ninth",
-    "Tenth",
-  ];
-  return phases[phaseNumber - 1] || `${phaseNumber}th`;
-}
+import { getPhaseName } from "@/utils/phaseUtils";
 
 export default function TimeProgress() {
   const [progress, setProgress] = useState(0);
@@ -43,13 +27,13 @@ export default function TimeProgress() {
     ? `${getPhaseName(selectedTask.pomo_count + 1)} Phase`
     : "First Phase";
 
-    useEffect(() => {
-      if (currentDuration === 0 && selectedTask) {
-        if (workSession) {
-          handlePomosCount(selectedTask.id, selectedTask.pomo_count + 1);
-        }
+  useEffect(() => {
+    if (currentDuration === 0 && selectedTask) {
+      if (workSession) {
+        handlePomosCount(selectedTask.id, selectedTask.pomo_count + 1);
       }
-    }, [currentDuration, workSession, selectedTask, handlePomosCount]);    
+    }
+  }, [currentDuration, workSession, selectedTask, handlePomosCount]);    
 
 
   return (

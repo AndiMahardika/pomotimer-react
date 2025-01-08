@@ -3,7 +3,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import useTaskStore from "@/store/taskStore";
 import { Tasks } from "@/utils/entity";
 import { supabase } from "@/utils/supabase";
-import { FilePenLine, Loader2, Trash2 } from "lucide-react";
+import { CircleCheckBig, FilePenLine, Loader2, Trash2 } from "lucide-react";
 import useSetting from "../hooks/useSetting";
 import useTimerStore from "@/store/useTmerStore";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
@@ -90,14 +90,24 @@ export default function TaskItem({ data, loading, handleDeleteTask, handleUpdate
   };
 
   return (
-    <div className="flex items-center justify-between rounded-md py-1 px-2 bg-white font-semibold text-slate-900">
-      <p className="">{data.task}</p>
+    <div className="flex items-center justify-between rounded-md py-1 px-2 gap-x-2 bg-white font-semibold text-slate-900">
+      <div className="flex items-center w-full gap-x-2">
+        <div className="w-fit relative">
+          <Checkbox
+            checked={data.is_selected}
+            onCheckedChange={() => handleSelectTask(data.id, data.is_selected)}
+            className="absolute opacity-0 cursor-pointer"
+          />
+          <CircleCheckBig
+            size={24}
+            className={`cursor-pointer ${data.is_selected ? 'text-green-500' : 'text-slate-400'}`}
+            onClick={() => handleSelectTask(data.id, data.is_selected)}
+          />
+        </div>
+        <p className="text-sm md:text-base w-5/6 line-clamp-2">{data.task}</p>
+      </div>
       <div className="flex items-center gap-x-1">
-        <p className="text-xs md:text-sm">{data.pomo_count} Pomos</p>
-        <Checkbox
-          checked={data.is_selected}
-          onCheckedChange={() => handleSelectTask(data.id, data.is_selected)}
-        />
+        <p className="text-xs md:text-sm text-nowrap">{data.pomo_count} Pomos</p>
 
         {/* Edit */}
         <Dialog>

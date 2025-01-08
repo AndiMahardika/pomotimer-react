@@ -5,6 +5,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import useTimerStore from "@/store/useTmerStore";
 import useAuth from "@/hooks/useAuth";
 import useTaskStore from "@/store/taskStore";
+import useUserStore from "@/store/useUserStore";
 
 export default function Navbar() {
   const navigate = useNavigate();
