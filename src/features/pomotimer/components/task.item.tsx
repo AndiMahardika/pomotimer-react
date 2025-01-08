@@ -6,6 +6,7 @@ import { supabase } from "@/utils/supabase";
 import { Loader2, Trash2 } from "lucide-react";
 import useSetting from "../hooks/useSetting";
 import useTimerStore from "@/store/useTmerStore";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
 interface TaskProps {
   data: Tasks;
@@ -85,18 +86,25 @@ export default function TaskItem({ data, loading, handleDeleteTask }: TaskProps)
           checked={data.is_selected}
           onCheckedChange={() => handleSelectTask(data.id, data.is_selected)}
         />
-        <Button
-          size={"icon"}
-          variant={"destructive"}
-          disabled={loading}
-          onClick={handleDeleteTask}
-        >
-          {loading ? (
-            <Loader2 className="animate-spin" size={24} />
-          ) : (
-            <Trash2 size={24} />
-          )}
-        </Button>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button size={"icon"} variant={"destructive"}>
+              { loading ? <Loader2 className="animate-spin" /> : <Trash2 />}
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you sure you want to delete this task?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone and will permanently remove the task from your list.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={handleDeleteTask}>Delete</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </div>
   );

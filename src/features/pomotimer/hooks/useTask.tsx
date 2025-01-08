@@ -3,6 +3,7 @@
   import useTaskStore from '@/store/taskStore';
   import React, { useEffect, useState } from 'react';
   import useUserStore from '@/store/useUserStore';
+  import { useToast } from '@/hooks/use-toast';
 
   export default function useTask() {
     const [isLoading, setIsLoading] = useState(false);
@@ -10,6 +11,7 @@
     const [isDeleting, setIsDeleting] = useState(false);
     const { tasks, addTask, setTasks, deleteTask, updateTask } = useTaskStore();
     const { user } = useUserStore();
+    const { toast } = useToast()
 
     // Add Task
     const handleAddTask = async (e: React.FormEvent) => {
@@ -18,7 +20,13 @@
       const task = formData.get('task')?.toString().trim();
 
       if (!task) {
-        alert('Task cannot be empty');
+        toast({
+          className:
+           'fixed top-4 left-4 md:top-4 md:left-1/2 md:transform md:-translate-x-1/2 flex md:max-w-[420px] bg-red-500 text-white',
+          title: "Error",
+          description: "Task cannot be empty",
+          variant: "destructive",
+        })
         return;
       }
 
@@ -31,6 +39,15 @@
           .single();
 
         if (error) throw error;
+
+        if (data) {
+          toast({
+            className:
+             'fixed top-4 left-4 md:top-4 md:left-1/2 md:transform md:-translate-x-1/2 flex md:max-w-[420px] bg-green-500 text-white',
+            title: "Signup successful",
+            description: "Check your email for the confirmation link.",
+          })
+        }
       } catch (error) {
         console.error('Error adding task:', error);
       } finally {
@@ -64,14 +81,10 @@
     const handleDeleteTask = async (id: number) => {
       try {
         setIsDeleting(true);
-        const confirm = window.confirm('Are you sure you want to delete this task?');
-
-        if (!confirm) return;
 
         const { error } = await supabase.from('task').delete().eq('id', id);
 
         if (error) throw error;
-
       } catch (error) {
         console.error('Error deleting task:', error);
       } finally {
@@ -105,9 +118,9 @@
 
     // Real-time Listener
     useEffect(() => {
-      if (user?.id) {
-        fetchTasks();
-      }
+      // if (user?.id) {
+      //   fetchTasks();
+      // }
 
       const channel = supabase
         .channel('realtime-task')

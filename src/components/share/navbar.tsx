@@ -1,9 +1,10 @@
 import { Hourglass } from "lucide-react";
 import { Button } from "../ui/button";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import useTimerStore from "@/store/useTmerStore";
 import useAuth from "@/hooks/useAuth";
 import useTaskStore from "@/store/taskStore";
-import useTimerStore from "@/store/useTmerStore";
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -12,10 +13,6 @@ export default function Navbar() {
   const { setCurrentDuration, setIsRunning, setWorkSession } = useTimerStore();
 
   const handleLogout = async () => {
-    const confirm = window.confirm("Are you sure you want to logout?");
-
-    if (!confirm) return;
-
     clearTasks();
     setCurrentDuration(1500);
     setIsRunning(false);
@@ -25,16 +22,32 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="">
-      <div className="max-w-5xl mx-auto flex items-center justify-between p-3">
+    <>
+      <nav className="max-w-5xl mx-auto flex items-center justify-between p-3">
         <div className="flex items-center gap-x-2 text-3xl font-bold text-slate-300">
           <Hourglass size={32} />
           <h1>Pomotimer</h1>
         </div>
-        <Button className="bg-green-500 hover:bg-green-600" onClick={handleLogout}>
-          <Link to="/login">Logout</Link>
-        </Button>
-      </div>
-    </nav>
+
+        {/* AlertDialog Trigger and Content */}
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant={"destructive"}>Logout</Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you sure you want to logout?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action will end your current session and log you out of your account.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={handleLogout}>Logout</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </nav>
+    </>
   )
 }
