@@ -219,9 +219,9 @@
 
     // Real-time Listener
     useEffect(() => {
-      if (user?.id) {
-        fetchTasks();
-      }
+      // if (user?.id) {
+      //   fetchTasks();
+      // }
 
       const channel = supabase
         .channel('realtime-task')

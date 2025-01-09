@@ -8,6 +8,8 @@ export default function useAuth() {
   const [loading, setLoading] = useState(true);
   const { setUser } = useUserStore();
 
+  const BASE_URL = import.meta.env.BASE_URL;
+
   useEffect(() => {
     // Get current session
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -41,7 +43,7 @@ export default function useAuth() {
     const {data, error} = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: 'http://localhost:5173'        
+        redirectTo: `${BASE_URL}`,        
       }
     })
   }

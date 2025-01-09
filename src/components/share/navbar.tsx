@@ -5,21 +5,44 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import useTimerStore from "@/store/useTmerStore";
 import useAuth from "@/hooks/useAuth";
 import useTaskStore from "@/store/taskStore";
-import useUserStore from "@/store/useUserStore";
+import { supabase } from "@/utils/supabase";
 
 export default function Navbar() {
   const navigate = useNavigate();
   const { logout } = useAuth();
-  const { clearTasks } = useTaskStore();
+  const { clearTasks, unselectTask } = useTaskStore();
   const { setCurrentDuration, setIsRunning, setWorkSession } = useTimerStore();
+  const { selectedTask } = useTaskStore();
 
   const handleLogout = async () => {
+    if (selectedTask !== null){
+      unselectTaskDb(selectedTask.id)
+    }
+
+    unselectTask()
     clearTasks();
     setCurrentDuration(1500);
     setIsRunning(false);
     setWorkSession(true);
     await logout()
     navigate("/login")
+  }
+
+  async function unselectTaskDb(id: number){
+    try {
+      // Unselect current task
+      const { error } = await supabase
+        .from("task")
+        .update({ is_selected: false })
+        .eq("id", id);
+
+      if(error){
+        throw new error;  
+      }
+
+    } catch (error) {
+      throw new error;
+    }
   }
 
   return (
