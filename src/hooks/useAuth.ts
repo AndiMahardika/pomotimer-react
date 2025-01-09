@@ -40,7 +40,7 @@ export default function useAuth() {
   };
 
   const handleLoginWithGoogle = async () => {
-    const {data, error} = await supabase.auth.signInWithOAuth({
+    const {data: _user, error: _errorLogin} = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
         redirectTo: `${BASE_URL}`,        

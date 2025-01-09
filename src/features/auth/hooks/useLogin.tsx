@@ -26,7 +26,7 @@ export default function useLogin() {
     try {
       setLoading(true);
 
-      const { data: user, error } = await loginWithEmailPassword(data.email, data.password);
+      const { data: _user, error } = await loginWithEmailPassword(data.email, data.password);
 
       if (error) {
         toast({
