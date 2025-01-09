@@ -8,15 +8,19 @@ import { getPhaseName } from "@/utils/phaseUtils";
 
 export default function TimeProgress() {
   const [progress, setProgress] = useState(0);
-  const { workduration } = useSetting();
+  const { workduration, shortbreakduration } = useSetting();
   const { handlePomosCount } = useTask()
   const { selectedTask } = useTaskStore()
   const { currentDuration, workSession } = useTimerStore();
 
   useEffect(() => {
     // Update progress bar
-    setProgress(((workduration - currentDuration) / workduration) * 100);
-  }, [currentDuration, workduration]);
+    if (workSession) {
+      setProgress(((workduration - currentDuration) / workduration) * 100);
+    } else {
+      setProgress(((shortbreakduration - currentDuration) / shortbreakduration) * 100);
+    }
+  }, [currentDuration, workduration, shortbreakduration, workSession]);
 
   // Hitung fase saat ini dan fase berikutnya
   const currentPhase = selectedTask?.pomo_count

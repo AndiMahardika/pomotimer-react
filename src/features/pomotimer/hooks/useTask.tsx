@@ -4,14 +4,18 @@
   import React, { useEffect, useState } from 'react';
   import useUserStore from '@/store/useUserStore';
   import { useToast } from '@/hooks/use-toast';
+  import useTimerStore from '@/store/useTmerStore';
+  import useSetting from './useSetting';
 
   export default function useTask() {
     const [isLoading, setIsLoading] = useState(false);
     const [isAdding, setIsAdding] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
-    const { tasks, addTask, setTasks, deleteTask, updateTask } = useTaskStore();
+    const { tasks, addTask, setTasks, deleteTask, updateTask, selectTask, unselectTask } = useTaskStore();
     const { user } = useUserStore();
     const { toast } = useToast()
+    const { setWorkSession, setCurrentDuration, setIsRunning } = useTimerStore()
+    const { workduration } = useSetting()
 
     // Add Task
     const handleAddTask = async (e: React.FormEvent) => {
@@ -154,11 +158,70 @@
       }
     }
 
+    // select task 
+    const handleSelectTask = async (id: number, currentSelected: boolean) => {
+      try {
+        if (currentSelected) {
+          // Unselect current task
+          const { error } = await supabase
+            .from("task")
+            .update({ is_selected: false })
+            .eq("id", id);
+  
+          if (error) throw error;
+  
+          const updatedTasks = tasks.map((task) =>
+            task.id === id ? { ...task, is_selected: false } : task
+          );
+  
+          setTasks(updatedTasks);
+          setCurrentDuration(workduration)
+          setIsRunning(false)
+          unselectTask();
+        } else {
+          // Unselect tasks local storage
+          const updatedTasks = tasks.map((task) =>
+            task.id === id
+              ? { ...task, is_selected: true }
+              : { ...task, is_selected: false }
+          );
+  
+          // Unselect tasks in Supabase
+          const taskIds = tasks.map((task) => task.id);
+          const { error: unselectError } = await supabase
+            .from("task")
+            .update({ is_selected: false })
+            .in("id", taskIds);
+  
+          if (unselectError) throw unselectError;
+  
+          // Select task in Supabase
+          const { data: dataSelectedTask, error: selectError } = await supabase
+            .from("task")
+            .update({ is_selected: true })
+            .eq("id", id)
+            .select("*")
+            .single();
+  
+          if (selectError) throw selectError;
+  
+          setCurrentDuration(workduration);
+          setWorkSession(dataSelectedTask.workSession ?? true);
+          setIsRunning(false);
+  
+          setTasks(updatedTasks);
+          selectTask(dataSelectedTask.id);
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+
     // Real-time Listener
     useEffect(() => {
-      // if (user?.id) {
-      //   fetchTasks();
-      // }
+      if (user?.id) {
+        fetchTasks();
+      }
 
       const channel = supabase
         .channel('realtime-task')
@@ -184,5 +247,5 @@
       };
     }, [user?.id]);
 
-    return { handleAddTask, isAdding, tasks, isLoading, handleDeleteTask, isDeleting, handlePomosCount, handleUpdateTask };
+    return { handleAddTask, isAdding, tasks, isLoading, handleDeleteTask, isDeleting, handlePomosCount, handleUpdateTask, handleSelectTask };
   }
