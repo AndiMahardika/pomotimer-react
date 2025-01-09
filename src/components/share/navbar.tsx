@@ -28,23 +28,17 @@ export default function Navbar() {
     navigate("/login")
   }
 
-  async function unselectTaskDb(id: number){
-    try {
-      // Unselect current task
-      const { error } = await supabase
-        .from("task")
-        .update({ is_selected: false })
-        .eq("id", id);
-
-      if(error){
-        throw new error;  
-      }
-
-    } catch (error) {
-      throw new error;
+  async function unselectTaskDb(id: number) {
+    const { error } = await supabase
+      .from("task")
+      .update({ is_selected: false })
+      .eq("id", id);
+  
+    if (error) {
+      throw error;
     }
   }
-
+  
   return (
     <>
       <nav className="max-w-5xl mx-auto flex items-center justify-between p-3">
