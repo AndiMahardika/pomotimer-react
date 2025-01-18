@@ -1,50 +1,53 @@
-# React + TypeScript + Vite
+# PomoTimer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+PomoTimer is a productivity application built using React and TypeScript, designed to help users manage their time efficiently using the Pomodoro technique. The application leverages Zustand for state management to ensure a smooth and responsive user experience. It also includes OAuth authentication via Supabase Auth for secure user login.
 
-Currently, two official plugins are available:
+## Features
+- **Pomodoro Timer**: Helps users focus on tasks with timed work sessions and breaks.
+- **Task Management**: Allows users to create and track tasks.
+- **User Authentication**: Secure login with OAuth via Supabase Auth.
+- **Responsive UI**: Built with Shadcn UI for a modern and clean interface.
+- **Data Storage**: Utilizes Supabase for storing user data.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Tech Stack
+- **Frontend**: React, TypeScript, Shadcn UI
+- **Backend**: Supabase (for authentication and data storage)
+- **State Management**: Zustand
+- **Authentication**: OAuth via Supabase Auth
 
-## Expanding the ESLint configuration
+## Installation
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+To run PomoTimer locally, follow these steps:
 
-- Configure the top-level `parserOptions` property like this:
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/AndiMahardika/pomotimer-react.git
+   cd pomotimer-react
+   ```
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+3. **Start the development server**
+   ```bash
+   npm start
+   ```
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+4. **Open your browser** and navigate to `http://localhost:5173`.
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+## Usage
+1. **Register/Login**: Use the secure login feature with OAuth.
+2. **Create Tasks**: Add tasks that you want to focus on.
+3. **Start Timer**: Use the Pomodoro timer to begin a focus session.
+4. **Track Progress**: Monitor your completed tasks and work sessions.
+
+## Live Demo
+Check out the live demo of PomoTimer: [PomoTimer Demo](https://pomotimer-chi.vercel.app/)
+
+## Repository
+Access the source code on GitHub: [PomoTimer GitHub](https://github.com/AndiMahardika/pomotimer-react)
+
+## Contributing
+Contributions are welcome! Please fork the repository and submit a pull request for any improvements or bug fixes.
