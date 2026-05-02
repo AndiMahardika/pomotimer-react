@@ -1,13 +1,38 @@
 import { Button } from "@/components/ui/button";
 import { ChevronsRight, Pause, Play, RotateCcw } from "lucide-react";
 import useTimer from "../hooks/useTimer";
+import useTaskStore from "@/store/taskStore";
+import useTask from "../hooks/useTask";
 
 export default function Timer() {
-  const { handleFastForward, handleReset, handleStartPause, currentDuration, isRunning, speed, workSession } = useTimer();
+  const {
+    handleFastForward,
+    handleReset,
+    handleStartPause,
+    currentDuration,
+    isRunning,
+    speed,
+    workSession,
+  } = useTimer();
+  const { selectedTask } = useTaskStore();
+  const { tasks } = useTask();
+
+  const alternatingColors = [
+    "text-[#8A56F6]",
+    "text-[#22C5A9]",
+    "text-[#F4C724]",
+    "text-[#3B7DF6]",
+  ];
+
+  const selectedTaskIndex = tasks.findIndex((t) => t.id === selectedTask?.id);
+  const activeColorClass =
+    selectedTaskIndex !== -1
+      ? alternatingColors[selectedTaskIndex % alternatingColors.length]
+      : "text-[#3B7DF6]";
 
   return (
     <div className="border-2 border-slate-100 bg-white rounded-md p-4 h-4/6 flex flex-col items-center justify-center space-y-9 shadow-sm">
-      <p className={`text-2xl font-bold text-center ${workSession ? "text-[#3B7DF6]" : "text-[#3B7DF6]"}`}>
+      <p className={`text-2xl font-bold text-center ${activeColorClass}`}>
         {workSession ? "Work Session" : "Break Session"}
       </p>
       <p className="text-7xl md:text-9xl font-extrabold text-center text-slate-900">
@@ -34,13 +59,13 @@ export default function Timer() {
           onClick={handleFastForward}
         >
           {speed === 1 ? (
-            <ChevronsRight size={24} />) 
-          : (
+            <ChevronsRight size={24} />
+          ) : (
             <>
               {speed}x
               <ChevronsRight size={24} />
             </>
-          ) } 
+          )}
         </Button>
       </div>
     </div>

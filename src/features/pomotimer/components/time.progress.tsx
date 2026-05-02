@@ -12,6 +12,20 @@ export default function TimeProgress() {
   const { handlePomosCount } = useTask();
   const { selectedTask } = useTaskStore();
   const { currentDuration, workSession } = useTimerStore();
+  const { tasks } = useTask();
+
+  const alternatingColors = [
+    "text-[#8A56F6]",
+    "text-[#22C5A9]",
+    "text-[#F4C724]",
+    "text-[#3B7DF6]",
+  ];
+
+  const selectedTaskIndex = tasks.findIndex((t) => t.id === selectedTask?.id);
+  const activeColorClass =
+    selectedTaskIndex !== -1
+      ? alternatingColors[selectedTaskIndex % alternatingColors.length]
+      : "text-[#3B7DF6]";
 
   useEffect(() => {
     // Update progress bar
@@ -24,7 +38,6 @@ export default function TimeProgress() {
     }
   }, [currentDuration, workduration, shortbreakduration, workSession]);
 
-  // Hitung fase saat ini dan fase berikutnya
   const currentPhase = selectedTask?.pomo_count
     ? `${getPhaseName(selectedTask.pomo_count)} Phase`
     : "No Phase";
@@ -44,10 +57,10 @@ export default function TimeProgress() {
   return (
     <div className="bg-white border border-slate-100 rounded-md px-4 p-4 md:p-6 h-2/6 flex flex-col justify-between shadow-sm">
       <div>
-        <p className="text-2xl md:text-3xl font-bold text-[#3B7DF6]">
+        <p className={`text-2xl font-bold ${activeColorClass}`}>
           {selectedTask?.task || "No Task Selected"}
         </p>
-        <p className="text-base md:text-lg font-bold text-slate-500">
+        <p className={`text-base md:text-lg font-bold text-slate-600`}>
           {workSession ? currentPhase : "Break Session"}
         </p>
       </div>

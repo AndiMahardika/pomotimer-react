@@ -72,7 +72,7 @@ export default function Task() {
       </div>
 
       {/* Task List */}
-      <section className="p-2 flex flex-col gap-y-2 overflow-y-auto">
+      <section className="p-2 flex flex-col gap-y-2 overflow-y-auto flex-1">
         {isLoading ? (
           <>
             <TaskSkeleton />
@@ -80,9 +80,9 @@ export default function Task() {
             <TaskSkeleton />
           </>
         ) : tasks.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-10 opacity-50">
+          <div className="flex flex-col items-center justify-center flex-1 py-10">
             <img src={images.addtask} alt="No tasks" className="w-48 mb-4" />
-            <p className="text-slate-400 text-sm italic">
+            <p className="text-slate-600 text-sm italic">
               {searchQuery
                 ? "No matching tasks found"
                 : "No tasks yet. Click + to add one!"}
