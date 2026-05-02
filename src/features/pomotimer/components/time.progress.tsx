@@ -9,8 +9,8 @@ import { getPhaseName } from "@/utils/phaseUtils";
 export default function TimeProgress() {
   const [progress, setProgress] = useState(0);
   const { workduration, shortbreakduration } = useSetting();
-  const { handlePomosCount } = useTask()
-  const { selectedTask } = useTaskStore()
+  const { handlePomosCount } = useTask();
+  const { selectedTask } = useTaskStore();
   const { currentDuration, workSession } = useTimerStore();
 
   useEffect(() => {
@@ -18,7 +18,9 @@ export default function TimeProgress() {
     if (workSession) {
       setProgress(((workduration - currentDuration) / workduration) * 100);
     } else {
-      setProgress(((shortbreakduration - currentDuration) / shortbreakduration) * 100);
+      setProgress(
+        ((shortbreakduration - currentDuration) / shortbreakduration) * 100,
+      );
     }
   }, [currentDuration, workduration, shortbreakduration, workSession]);
 
@@ -37,21 +39,30 @@ export default function TimeProgress() {
         handlePomosCount(selectedTask.id, selectedTask.pomo_count + 1);
       }
     }
-  }, [currentDuration, workSession, selectedTask, handlePomosCount]);    
-
+  }, [currentDuration, workSession, selectedTask, handlePomosCount]);
 
   return (
     <div className="bg-white border border-slate-100 rounded-md px-4 p-4 md:p-6 h-2/6 flex flex-col justify-between shadow-sm">
       <div>
-        <p className="text-2xl md:text-3xl font-bold text-[#21A664]">{selectedTask?.task || "No Task Selected"}</p>
-        <p className="text-base md:text-lg font-bold text-slate-500">{workSession ? currentPhase : "Break Session"}</p>
+        <p className="text-2xl md:text-3xl font-bold text-[#3B7DF6]">
+          {selectedTask?.task || "No Task Selected"}
+        </p>
+        <p className="text-base md:text-lg font-bold text-slate-500">
+          {workSession ? currentPhase : "Break Session"}
+        </p>
       </div>
       <div>
         <div className="flex justify-between text-sm text-slate-500 mb-1">
           <p>{Math.ceil(currentDuration / 60)} minutes remaining</p>
-          <p className="font-bold text-slate-700">{workSession ? `Next: ${nextPhase}` : "Work Session"}</p>
+          <p className="font-bold text-slate-700">
+            {workSession ? `Next: ${nextPhase}` : "Work Session"}
+          </p>
         </div>
-        <Progress value={progress} className="bg-slate-100" indicatorClassName="bg-[#21A664]" />
+        <Progress
+          value={progress}
+          className="bg-slate-100"
+          indicatorClassName="bg-[#21A664]"
+        />
       </div>
     </div>
   );

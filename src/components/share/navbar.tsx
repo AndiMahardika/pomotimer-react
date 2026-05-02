@@ -1,7 +1,17 @@
 import { Hourglass } from "lucide-react";
 import { Button } from "../ui/button";
 import { useNavigate } from "react-router-dom";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import useTimerStore from "@/store/useTmerStore";
 import useAuth from "@/hooks/useAuth";
 import useTaskStore from "@/store/taskStore";
@@ -16,18 +26,18 @@ export default function Navbar() {
   const { selectedTask } = useTaskStore();
 
   const handleLogout = async () => {
-    if (selectedTask?.id){
-      await unselectTaskDb(selectedTask.id)
+    if (selectedTask?.id) {
+      await unselectTaskDb(selectedTask.id);
     }
 
-    unselectTask()
+    unselectTask();
     clearTasks();
     setCurrentDuration(1500);
     setIsRunning(false);
     setWorkSession(true);
-    await logout()
-    navigate("/login")
-  }
+    await logout();
+    navigate("/login");
+  };
 
   async function unselectTaskDb(id: string) {
     try {
@@ -37,34 +47,49 @@ export default function Navbar() {
       console.error("Error unselecting task on logout:", error);
     }
   }
-  
+
   return (
     <>
       <nav className="max-w-5xl mx-auto flex items-center justify-between p-3">
         <div className="flex items-center gap-x-2 text-3xl font-bold">
-          <Hourglass size={32} className="text-[#21A664]" />
-          <h1 className="text-[#21A664]">Pomotimer</h1>
+          <Hourglass size={32} className="text-[#3B7DF6]" />
+          <h1 className="text-[#3B7DF6]">Pomotimer</h1>
         </div>
 
         {/* AlertDialog Trigger and Content */}
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button variant="outline" className="text-[#3B7DF6] border-[#3B7DF6]/20 hover:bg-[#3B7DF6]/10 bg-white">Logout</Button>
+            <Button
+              variant="outline"
+              className="text-[#ef4444] border-[#ef4444]/20 hover:bg-[#ef4444]/10 bg-white"
+            >
+              Logout
+            </Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Are you sure you want to logout?</AlertDialogTitle>
+              <AlertDialogTitle>
+                Are you sure you want to logout?
+              </AlertDialogTitle>
               <AlertDialogDescription>
-                This action will end your current session and log you out of your account.
+                This action will end your current session and log you out of
+                your account.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel className="bg-black text-white hover:bg-slate-800 hover:text-white border-none">Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={handleLogout} className="bg-red-600 hover:bg-red-700 text-white">Logout</AlertDialogAction>
+              <AlertDialogCancel className="bg-black text-white hover:bg-slate-800 hover:text-white border-none">
+                Cancel
+              </AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleLogout}
+                className="bg-red-600 hover:bg-red-700 text-white"
+              >
+                Logout
+              </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
       </nav>
     </>
-  )
+  );
 }
