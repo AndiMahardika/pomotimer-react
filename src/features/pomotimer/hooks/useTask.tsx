@@ -22,7 +22,12 @@ export default function useTask() {
   const [isLoading] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const { tasks, setTasks, updateTask, selectTask, unselectTask } = useTaskStore();
+
+  const filteredTasks = tasks.filter((task) =>
+    task.task.toLowerCase().includes(searchQuery.toLowerCase())
+  );
   const { user } = useUserStore();
   const { toast } = useToast()
   const { setWorkSession, setCurrentDuration, setIsRunning } = useTimerStore()
@@ -202,5 +207,5 @@ export default function useTask() {
     return () => unsubscribe();
   }, [user?.uid, setTasks]);
 
-  return { handleAddTask, isAdding, tasks, isLoading, handleDeleteTask, isDeleting, handlePomosCount, handleUpdateTask, handleSelectTask };
+  return { handleAddTask, isAdding, tasks: filteredTasks, isLoading, handleDeleteTask, isDeleting, handlePomosCount, handleUpdateTask, handleSelectTask, searchQuery, setSearchQuery };
 }
