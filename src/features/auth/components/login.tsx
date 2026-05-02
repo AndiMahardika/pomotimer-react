@@ -20,8 +20,8 @@ export default function Login() {
   return (
     <AuthLayout>
       <section className="p-8 flex flex-col justify-center items-center relative">
-        <div className="flex items-center gap-x-1 font-semibold  text-slate-700 absolute left-7 top-6 text-sm md:hidden">
-          <Hourglass size={18} />
+        <div className="flex items-center gap-x-1 font-semibold text-slate-700 absolute left-7 top-6 text-sm md:hidden">
+          <Hourglass size={18} className="text-[#F4C724]" />
           <h3>Pomotimer</h3>
         </div>
 
@@ -29,7 +29,7 @@ export default function Login() {
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <div>
-                <h3 className="text-2xl font-bold">Login</h3>
+                <h3 className="text-2xl font-bold text-slate-900">Login</h3>
                 <p className="text-slate-400 text-sm">
                   Enter your email and password to login your account
                 </p>
@@ -65,8 +65,9 @@ export default function Login() {
                 )}
               />
               <Button
-                className="bg-green-500 hover:bg-green-600 w-full"
+                className="bg-[#21A664] hover:bg-[#21A664]/90 w-full"
                 type="submit"
+                disabled={loading}
               >
                 {loading ? (
                   <>
