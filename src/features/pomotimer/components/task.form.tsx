@@ -5,21 +5,30 @@ import { Loader2 } from "lucide-react";
 interface TaskFormProps {
   loading: boolean
   handleAddTask: (_e: React.FormEvent) => void
+  onSuccess?: () => void
 }
 
-export default function TaskForm( { loading, handleAddTask }: TaskFormProps) {
+export default function TaskForm( { loading, handleAddTask, onSuccess }: TaskFormProps) {
+  const handleSubmit = async (e: React.FormEvent) => {
+    await handleAddTask(e);
+    if (onSuccess) onSuccess();
+  };
+
   return (
-    <form className="flex w-full items-center space-x-2 sticky top-0 bg-slate-700 px-4 py-4" onSubmit={handleAddTask}>
-      <Input type="text" name="task" placeholder="Task..." className="bg-white" />
+    <form className="grid gap-4 py-4" onSubmit={handleSubmit}>
+      <div className="grid gap-2">
+        <label htmlFor="task" className="text-sm font-medium">Task Title</label>
+        <Input id="task" type="text" name="task" placeholder="What are you working on?" className="bg-white" required />
+      </div>
       <Button
         type="submit"
-        className="bg-green-500 text-white hover:bg-green-600"
+        className="bg-green-500 text-white hover:bg-green-600 w-full"
         disabled={loading}
       >
         {loading ? (
           <>
-            <Loader2 className="animate-spin" /> 
-            Loading
+            <Loader2 className="animate-spin mr-2" /> 
+            Adding...
           </>
         ) : "Add Task"}
       </Button>
