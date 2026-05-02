@@ -45,6 +45,17 @@ export default function useTask() {
       return;
     }
 
+    if (!user) {
+      toast({
+        className:
+         'fixed top-4 left-4 md:top-4 md:left-1/2 md:transform md:-translate-x-1/2 flex md:max-w-[420px] bg-red-500 text-white',
+        title: "Error",
+        description: "You must be logged in to add tasks",
+        variant: "destructive",
+      })
+      return;
+    }
+
     try {
       setIsAdding(true);
       await addDoc(collection(db, "task"), {
@@ -55,6 +66,9 @@ export default function useTask() {
         created_at: new Date().toISOString()
       });
 
+      // Reset form input
+      (e.target as HTMLFormElement).reset();
+
       toast({
         className:
          'fixed top-4 left-4 md:top-4 md:left-1/2 md:transform md:-translate-x-1/2 flex md:max-w-[420px] bg-green-500 text-white',
@@ -63,6 +77,13 @@ export default function useTask() {
       })
     } catch (error) {
       console.error('Error adding task:', error);
+      toast({
+        className:
+         'fixed top-4 left-4 md:top-4 md:left-1/2 md:transform md:-translate-x-1/2 flex md:max-w-[420px] bg-red-500 text-white',
+        title: "Error",
+        description: "Failed to add task. Please try again.",
+        variant: "destructive",
+      })
     } finally {
       setIsAdding(false);
     }
