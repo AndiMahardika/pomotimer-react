@@ -33,7 +33,7 @@ export default function TimeProgress() {
 
   useEffect(() => {
     if (currentDuration === 0 && selectedTask) {
-      if (workSession) {
+      if (workSession && selectedTask.id) {
         handlePomosCount(selectedTask.id, selectedTask.pomo_count + 1);
       }
     }
@@ -41,17 +41,17 @@ export default function TimeProgress() {
 
 
   return (
-    <div className="bg-slate-300 rounded-md px-4 p-4 md:p-6 h-2/6 flex flex-col justify-between text-slate-700">
+    <div className="bg-blue-50 border border-blue-100 rounded-md px-4 p-4 md:p-6 h-2/6 flex flex-col justify-between shadow-sm">
       <div>
-        <p className="text-2xl md:text-3xl font-bold">{selectedTask?.task || "No Task Selected"}</p>
-        <p className="text-base md:text-lg font-bold">{workSession ? currentPhase : "Break Session"}</p>
+        <p className="text-2xl md:text-3xl font-bold text-blue-900">{selectedTask?.task || "No Task Selected"}</p>
+        <p className="text-base md:text-lg font-bold text-blue-600">{workSession ? currentPhase : "Break Session"}</p>
       </div>
       <div>
-        <div className="flex justify-between text-sm">
+        <div className="flex justify-between text-sm text-slate-500 mb-1">
           <p>{Math.ceil(currentDuration / 60)} minutes remaining</p>
-          <p className="font-bold">{workSession ? `Next: ${nextPhase}` : "Work Session"}</p>
+          <p className="font-bold text-slate-700">{workSession ? `Next: ${nextPhase}` : "Work Session"}</p>
         </div>
-        <Progress value={progress} className="mt-2" />
+        <Progress value={progress} className="bg-slate-200" indicatorClassName="bg-blue-600" />
       </div>
     </div>
   );

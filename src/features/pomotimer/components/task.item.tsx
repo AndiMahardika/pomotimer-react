@@ -27,45 +27,45 @@ export default function TaskItem({ data, loading, handleDeleteTask, handleUpdate
   };
 
   return (
-    <div className="flex items-center justify-between rounded-md py-1 px-2 gap-x-2 bg-white font-semibold text-slate-900">
-      <div className="flex items-center w-full gap-x-2">
-        <div className="w-fit relative">
+    <div className={`flex items-center justify-between rounded-md py-1 px-4 gap-x-2 bg-white border border-slate-50 font-semibold text-slate-900 transition-all ${data.is_selected ? 'ring-1 ring-blue-600/10 shadow-sm' : ''}`}>
+      <div className="flex items-center w-full gap-x-3">
+        <div className="w-fit relative flex items-center justify-center">
           <Checkbox
             checked={data.is_selected}
             onCheckedChange={() => data.id && handleSelectTask(data.id, !!data.is_selected)}
-            className="absolute opacity-0 cursor-pointer"
+            className="absolute opacity-0 cursor-pointer w-6 h-6"
           />
           <CircleCheckBig
             size={24}
-            className={`cursor-pointer ${data.is_selected ? 'text-green-500' : 'text-slate-400'}`}
+            className={`cursor-pointer transition-colors ${data.is_selected ? 'text-blue-600' : 'text-slate-300 hover:text-slate-400'}`}
             onClick={() => data.id && handleSelectTask(data.id, !!data.is_selected)}
           />
         </div>
-        <p className="text-sm md:text-base w-5/6 line-clamp-2">{data.task}</p>
+        <p className={`text-sm md:text-base w-5/6 line-clamp-2 ${data.is_selected ? 'text-blue-900' : 'text-slate-700'}`}>{data.task}</p>
       </div>
       <div className="flex items-center gap-x-1">
-        <p className="text-xs md:text-sm text-nowrap">{data.pomo_count} Pomos</p>
+        <p className="text-xs text-slate-400 text-nowrap mr-2">{data.pomo_count} Pomos</p>
 
         {/* Edit */}
         <Dialog>
           <DialogTrigger asChild>
-            <Button size={"icon"} className="bg-slate-700 hover:bg-slate-800">
-              { loading ? <Loader2 className="animate-spin" /> : <FilePenLine /> }
+            <Button size={"icon"} variant="ghost" className="text-slate-400 hover:text-amber-500 hover:bg-amber-50 transition-all">
+              { loading ? <Loader2 className="animate-spin" /> : <FilePenLine size={18} /> }
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
+          <DialogContent className="sm:max-w-[425px] bg-white text-slate-900 border-slate-100">
             <DialogHeader>
               <DialogTitle>Edit Task</DialogTitle>
               <DialogDescription>
-                Update the details of your task below. Once you're finished, click save to apply the changes.
+                Update the details of your task below.
               </DialogDescription>
             </DialogHeader>
-            <div className="">
-              <Input id="task" value={newTaskTitle} onChange={(e) => setNewTaskTitle(e.target.value)} className="col-span-3" autoComplete="off" />
+            <div className="py-4">
+              <Input id="task" value={newTaskTitle} onChange={(e) => setNewTaskTitle(e.target.value)} className="bg-slate-50 border-slate-200" autoComplete="off" />
             </div>
             <DialogFooter>
             <DialogTrigger asChild>
-              <Button type="submit" size={"sm"} onClick={handleSaveChanges}>Save changes</Button>
+              <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white" onClick={handleSaveChanges}>Save changes</Button>
             </DialogTrigger>
             </DialogFooter>
           </DialogContent>
@@ -74,20 +74,20 @@ export default function TaskItem({ data, loading, handleDeleteTask, handleUpdate
         {/* Delete */}
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button size={"icon"} variant={"destructive"}>
-              { loading ? <Loader2 className="animate-spin" /> : <Trash2 />}
+            <Button size={"icon"} variant="ghost" className="text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all">
+              { loading ? <Loader2 className="animate-spin" /> : <Trash2 size={18} />}
             </Button>
           </AlertDialogTrigger>
-          <AlertDialogContent>
+          <AlertDialogContent className="bg-white text-slate-900 border-slate-100">
             <AlertDialogHeader>
               <AlertDialogTitle>Are you sure you want to delete this task?</AlertDialogTitle>
               <AlertDialogDescription>
-                This action cannot be undone and will permanently remove the task from your list.
+                This action cannot be undone.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={handleDeleteTask}>Delete</AlertDialogAction>
+              <AlertDialogAction onClick={handleDeleteTask} className="bg-red-600 hover:bg-red-700 text-white">Delete</AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>

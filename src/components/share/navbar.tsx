@@ -41,15 +41,15 @@ export default function Navbar() {
   return (
     <>
       <nav className="max-w-5xl mx-auto flex items-center justify-between p-3">
-        <div className="flex items-center gap-x-2 text-3xl font-bold text-slate-300">
-          <Hourglass size={32} />
-          <h1>Pomotimer</h1>
+        <div className="flex items-center gap-x-2 text-3xl font-bold">
+          <Hourglass size={32} className="text-blue-600" />
+          <h1 className="text-slate-900">Pomotimer</h1>
         </div>
 
         {/* AlertDialog Trigger and Content */}
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button variant={"destructive"}>Logout</Button>
+            <Button variant="outline" className="text-red-500 border-red-200 hover:bg-red-50 bg-white">Logout</Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
