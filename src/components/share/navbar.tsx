@@ -5,7 +5,8 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import useTimerStore from "@/store/useTmerStore";
 import useAuth from "@/hooks/useAuth";
 import useTaskStore from "@/store/taskStore";
-import { supabase } from "@/utils/supabase";
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "@/utils/firebase";
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -15,8 +16,8 @@ export default function Navbar() {
   const { selectedTask } = useTaskStore();
 
   const handleLogout = async () => {
-    if (selectedTask !== null){
-      unselectTaskDb(selectedTask.id)
+    if (selectedTask?.id){
+      await unselectTaskDb(selectedTask.id)
     }
 
     unselectTask()
@@ -28,14 +29,12 @@ export default function Navbar() {
     navigate("/login")
   }
 
-  async function unselectTaskDb(id: number) {
-    const { error } = await supabase
-      .from("task")
-      .update({ is_selected: false })
-      .eq("id", id);
-  
-    if (error) {
-      throw error;
+  async function unselectTaskDb(id: string) {
+    try {
+      const taskRef = doc(db, "task", id);
+      await updateDoc(taskRef, { is_selected: false });
+    } catch (error) {
+      console.error("Error unselecting task on logout:", error);
     }
   }
   

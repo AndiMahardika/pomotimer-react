@@ -12,7 +12,7 @@ interface TaskProps {
   data: Tasks;
   loading?: boolean;
   handleDeleteTask?: () => void;
-  handleUpdateTask?: (id: number, title: string) => void;
+  handleUpdateTask?: (id: string, title: string) => void;
 }
 
 export default function TaskItem({ data, loading, handleDeleteTask, handleUpdateTask }: TaskProps) {
@@ -21,7 +21,7 @@ export default function TaskItem({ data, loading, handleDeleteTask, handleUpdate
   const [newTaskTitle, setNewTaskTitle] = useState(data.task);
 
   const handleSaveChanges = () => {
-    if (handleUpdateTask) {
+    if (handleUpdateTask && data.id) {
       handleUpdateTask(data.id, newTaskTitle);
     }
   };
@@ -32,13 +32,13 @@ export default function TaskItem({ data, loading, handleDeleteTask, handleUpdate
         <div className="w-fit relative">
           <Checkbox
             checked={data.is_selected}
-            onCheckedChange={() => handleSelectTask(data.id, data.is_selected)}
+            onCheckedChange={() => data.id && handleSelectTask(data.id, !!data.is_selected)}
             className="absolute opacity-0 cursor-pointer"
           />
           <CircleCheckBig
             size={24}
             className={`cursor-pointer ${data.is_selected ? 'text-green-500' : 'text-slate-400'}`}
-            onClick={() => handleSelectTask(data.id, data.is_selected)}
+            onClick={() => data.id && handleSelectTask(data.id, !!data.is_selected)}
           />
         </div>
         <p className="text-sm md:text-base w-5/6 line-clamp-2">{data.task}</p>
