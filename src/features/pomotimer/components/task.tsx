@@ -34,7 +34,7 @@ export default function Task() {
   return (
     <div className="col-span-1 bg-white border border-slate-100 rounded-md flex flex-col h-full overflow-hidden shadow-sm">
       {/* Header with Search and Add Button */}
-      <div className="p-4 bg-slate-50 border-b border-slate-100 flex items-center gap-2 sticky top-0 z-10">
+      <div className="p-2 bg-slate-50 border-b border-slate-100 flex items-center gap-2 sticky top-0 z-10">
         <div className="relative flex-1">
           <Search className="absolute left-2 top-1/2 -translate-y-1/2 text-slate-400 h-4 w-4" />
           <Input
@@ -50,7 +50,7 @@ export default function Task() {
           <DialogTrigger asChild>
             <Button
               size="icon"
-              className="bg-blue-600 hover:bg-blue-700 text-white h-9 w-9 shrink-0 transition-all shadow-sm"
+              className="bg-[#3B7DF6] hover:bg-[#3B7DF6]/90 text-white h-9 w-9 shrink-0 transition-all shadow-sm"
             >
               <Plus className="h-5 w-5" />
             </Button>
@@ -89,10 +89,11 @@ export default function Task() {
             </p>
           </div>
         ) : (
-          tasks.map((task) => (
+          tasks.map((task, index) => (
             <TaskItem
               key={task.id}
               data={task}
+              index={index}
               loading={isDeleting}
               handleDeleteTask={() => task.id && handleDeleteTask(task.id)}
               handleUpdateTask={(id, title) => handleUpdateTask(id, title)}

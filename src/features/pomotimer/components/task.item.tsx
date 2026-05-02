@@ -10,15 +10,24 @@ import useTask from "../hooks/useTask";
 
 interface TaskProps {
   data: Tasks;
+  index: number;
   loading?: boolean;
   handleDeleteTask?: () => void;
   handleUpdateTask?: (_id: string, _title: string) => void;
 }
 
-export default function TaskItem({ data, loading, handleDeleteTask, handleUpdateTask }: TaskProps) {
-  const { handleSelectTask } = useTask()
+const alternatingColors = [
+  { hex: "#8A56F6", bg: "bg-[#8A56F6]/10", text: "text-[#8A56F6]" }, // Purple
+  { hex: "#22C5A9", bg: "bg-[#22C5A9]/10", text: "text-[#22C5A9]" }, // Teal
+  { hex: "#F4C724", bg: "bg-[#F4C724]/10", text: "text-[#F4C724]" }, // Yellow
+  { hex: "#3B7DF6", bg: "bg-[#3B7DF6]/10", text: "text-[#3B7DF6]" }, // Blue
+];
 
+export default function TaskItem({ data, index, loading, handleDeleteTask, handleUpdateTask }: TaskProps) {
+  const { handleSelectTask } = useTask()
   const [newTaskTitle, setNewTaskTitle] = useState(data.task);
+
+  const colorScheme = alternatingColors[index % alternatingColors.length];
 
   const handleSaveChanges = () => {
     if (handleUpdateTask && data.id) {
@@ -27,7 +36,7 @@ export default function TaskItem({ data, loading, handleDeleteTask, handleUpdate
   };
 
   return (
-    <div className={`flex items-center justify-between rounded-md py-1 px-4 gap-x-2 bg-white border border-slate-50 font-semibold text-slate-900 transition-all ${data.is_selected ? 'ring-1 ring-blue-600/10 shadow-sm' : ''}`}>
+    <div className={`flex items-center justify-between rounded-md py-1 px-4 gap-x-2 border border-slate-50 font-semibold transition-all ${colorScheme.bg} ${data.is_selected ? 'ring-1 ring-blue-600/10 shadow-sm' : ''}`}>
       <div className="flex items-center w-full gap-x-3">
         <div className="w-fit relative flex items-center justify-center">
           <Checkbox
@@ -37,11 +46,11 @@ export default function TaskItem({ data, loading, handleDeleteTask, handleUpdate
           />
           <CircleCheckBig
             size={24}
-            className={`cursor-pointer transition-colors ${data.is_selected ? 'text-blue-600' : 'text-slate-300 hover:text-slate-400'}`}
+            className={`cursor-pointer transition-colors ${data.is_selected ? colorScheme.text : 'text-slate-300 hover:text-slate-400'}`}
             onClick={() => data.id && handleSelectTask(data.id, !!data.is_selected)}
           />
         </div>
-        <p className={`text-sm md:text-base w-5/6 line-clamp-2 ${data.is_selected ? 'text-blue-900' : 'text-slate-700'}`}>{data.task}</p>
+        <p className={`text-sm md:text-base w-5/6 line-clamp-2 ${data.is_selected ? 'text-slate-900' : 'text-slate-700'}`}>{data.task}</p>
       </div>
       <div className="flex items-center gap-x-1">
         <p className="text-xs text-slate-400 text-nowrap mr-2">{data.pomo_count} Pomos</p>
@@ -86,7 +95,7 @@ export default function TaskItem({ data, loading, handleDeleteTask, handleUpdate
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogCancel className="bg-black text-white hover:bg-slate-800 hover:text-white border-none">Cancel</AlertDialogCancel>
               <AlertDialogAction onClick={handleDeleteTask} className="bg-red-600 hover:bg-red-700 text-white">Delete</AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

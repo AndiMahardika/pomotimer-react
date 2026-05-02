@@ -42,14 +42,14 @@ export default function Navbar() {
     <>
       <nav className="max-w-5xl mx-auto flex items-center justify-between p-3">
         <div className="flex items-center gap-x-2 text-3xl font-bold">
-          <Hourglass size={32} className="text-blue-600" />
-          <h1 className="text-slate-900">Pomotimer</h1>
+          <Hourglass size={32} className="text-[#21A664]" />
+          <h1 className="text-[#21A664]">Pomotimer</h1>
         </div>
 
         {/* AlertDialog Trigger and Content */}
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button variant="outline" className="text-red-500 border-red-200 hover:bg-red-50 bg-white">Logout</Button>
+            <Button variant="outline" className="text-[#3B7DF6] border-[#3B7DF6]/20 hover:bg-[#3B7DF6]/10 bg-white">Logout</Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
@@ -59,8 +59,8 @@ export default function Navbar() {
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={handleLogout}>Logout</AlertDialogAction>
+              <AlertDialogCancel className="bg-black text-white hover:bg-slate-800 hover:text-white border-none">Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={handleLogout} className="bg-red-600 hover:bg-red-700 text-white">Logout</AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>

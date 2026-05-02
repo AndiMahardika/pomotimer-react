@@ -7,7 +7,7 @@ export default function Timer() {
 
   return (
     <div className="border-2 border-slate-100 bg-white rounded-md p-4 h-4/6 flex flex-col items-center justify-center space-y-9 shadow-sm">
-      <p className={`text-2xl font-bold text-center ${workSession ? "text-blue-600" : "text-emerald-500"}`}>
+      <p className={`text-2xl font-bold text-center ${workSession ? "text-[#21A664]" : "text-emerald-500"}`}>
         {workSession ? "Work Session" : "Break Session"}
       </p>
       <p className="text-7xl md:text-9xl font-extrabold text-center text-slate-900">
