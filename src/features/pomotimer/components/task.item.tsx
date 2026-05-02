@@ -25,6 +25,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import useTask from "../hooks/useTask";
+import useTimer from "../hooks/useTimer";
 
 interface TaskProps {
   data: Tasks;
@@ -49,6 +50,7 @@ export default function TaskItem({
   handleUpdateTask,
 }: TaskProps) {
   const { handleSelectTask } = useTask();
+  const { handleReset, isRunning } = useTimer();
   const [newTaskTitle, setNewTaskTitle] = useState(data.task);
 
   const colorScheme = alternatingColors[index % alternatingColors.length];
@@ -59,18 +61,27 @@ export default function TaskItem({
     }
   };
 
-  return (
+  const onSelectTask = () => {
+    if (data.id) {
+      handleSelectTask(data.id, !!data.is_selected);
+    }
+  };
+
+  const handleConfirmSwitch = () => {
+    handleReset();
+    onSelectTask();
+  };
+
+  const taskItemContent = (
     <div
-      onClick={() => data.id && handleSelectTask(data.id, !!data.is_selected)}
-      className={`flex items-center justify-between rounded-md py-1 px-4 gap-x-2 border-none font-semibold transition-all cursor-pointer ${colorScheme.bg} ${data.is_selected && "ring-2 ring-white/50 shadow-md"}`}
+      onClick={() => !isRunning && onSelectTask()}
+      className={`flex items-center justify-between rounded-md py-1 px-4 gap-x-2 border-none font-semibold transition-all cursor-pointer ${colorScheme.bg} ${data.is_selected && "ring-2 ring-white/50 shadow-md scale-[1.01]"}`}
     >
       <div className="flex items-center w-full gap-x-3">
         <div className="w-fit relative flex items-center justify-center">
           <Checkbox
             checked={data.is_selected}
-            onCheckedChange={() =>
-              data.id && handleSelectTask(data.id, !!data.is_selected)
-            }
+            onCheckedChange={() => !isRunning && onSelectTask()}
             className="absolute opacity-0 cursor-pointer w-6 h-6"
           />
           <CircleCheckBig
@@ -174,5 +185,36 @@ export default function TaskItem({
         </AlertDialog>
       </div>
     </div>
+  );
+
+  return (
+    <AlertDialog>
+      {isRunning && !data.is_selected ? (
+        <AlertDialogTrigger asChild>
+          {taskItemContent}
+        </AlertDialogTrigger>
+      ) : (
+        taskItemContent
+      )}
+      <AlertDialogContent className="bg-white text-slate-900 border-slate-100">
+        <AlertDialogHeader>
+          <AlertDialogTitle>Switch Task & Reset Timer?</AlertDialogTitle>
+          <AlertDialogDescription>
+            The timer is currently running. Switching to this task will pause the timer and reset the current session's progress.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel className="bg-black text-white hover:bg-slate-800 hover:text-white border-none">
+            Cancel
+          </AlertDialogCancel>
+          <AlertDialogAction
+            onClick={handleConfirmSwitch}
+            className="bg-red-600 hover:bg-red-700 text-white"
+          >
+            Switch Task
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }
