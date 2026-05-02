@@ -13,11 +13,9 @@ import googleIcon from "@/assets/google.svg";
 import { Link } from "react-router-dom";
 import { Hourglass, Loader2 } from "lucide-react";
 import useLogin from "../hooks/useLogin";
-import useAuth from "@/hooks/useAuth";
 
 export default function Login() {
-  const { form, loading, onSubmit } = useLogin();
-  const { handleLoginWithGoogle } = useAuth();
+  const { form, loading, onSubmit, onGoogleLogin } = useLogin();
 
   return (
     <AuthLayout>
@@ -32,7 +30,9 @@ export default function Login() {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <div>
                 <h3 className="text-2xl font-bold">Login</h3>
-                <p className="text-slate-400 text-sm">Enter your email and password to login your account</p>
+                <p className="text-slate-400 text-sm">
+                  Enter your email and password to login your account
+                </p>
               </div>
               <FormField
                 control={form.control}
@@ -54,19 +54,28 @@ export default function Login() {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input placeholder="Password" {...field} type="password" />
+                      <Input
+                        placeholder="Password"
+                        {...field}
+                        type="password"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <Button className="bg-green-500 hover:bg-green-600 w-full" type="submit">
+              <Button
+                className="bg-green-500 hover:bg-green-600 w-full"
+                type="submit"
+              >
                 {loading ? (
                   <>
-                    <Loader2 className="animate-spin" /> 
+                    <Loader2 className="animate-spin" />
                     Loading
                   </>
-                ) : "Login"}
+                ) : (
+                  "Login"
+                )}
               </Button>
 
               <div className="relative">
@@ -78,16 +87,35 @@ export default function Login() {
                     Or Continue with
                   </span>
                 </div>
-              </div> 
+              </div>
             </form>
-            <Button variant="outline" type="submit" className="flex items-center justify-center w-full mt-4" onClick={handleLoginWithGoogle}>
-              <img src={googleIcon} alt="Google" className="w-6" />
-              Google
+            <Button
+              variant="outline"
+              type="submit"
+              className="flex items-center justify-center w-full mt-4"
+              onClick={onGoogleLogin}
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="animate-spin mr-2" />
+                  Loading
+                </>
+              ) : (
+                <>
+                  <img src={googleIcon} alt="Google" className="w-6 mr-2" />
+                  Google
+                </>
+              )}
             </Button>
           </Form>
         </div>
 
-        <Button variant={"link"} type="submit" className="absolute top-4 right-4">
+        <Button
+          variant={"link"}
+          type="submit"
+          className="absolute top-4 right-4"
+        >
           <Link to={"/signup"}>Signup</Link>
         </Button>
       </section>

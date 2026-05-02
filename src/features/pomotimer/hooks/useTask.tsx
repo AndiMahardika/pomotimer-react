@@ -14,7 +14,7 @@ import {
 import useTaskStore from '@/store/taskStore';
 import React, { useEffect, useState } from 'react';
 import useUserStore from '@/store/useUserStore';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'react-hot-toast';
 import useTimerStore from '@/store/useTmerStore';
 import useSetting from './useSetting';
 
@@ -29,7 +29,6 @@ export default function useTask() {
     task.task.toLowerCase().includes(searchQuery.toLowerCase())
   );
   const { user } = useUserStore();
-  const { toast } = useToast()
   const { setWorkSession, setCurrentDuration, setIsRunning } = useTimerStore()
   const { workduration } = useSetting()
 
@@ -40,24 +39,12 @@ export default function useTask() {
     const taskContent = formData.get('task')?.toString().trim();
 
     if (!taskContent) {
-      toast({
-        className:
-         'fixed top-4 left-4 md:top-4 md:left-1/2 md:transform md:-translate-x-1/2 flex md:max-w-[420px] bg-red-500 text-white',
-        title: "Error",
-        description: "Task cannot be empty",
-        variant: "destructive",
-      })
+      toast.error("Task cannot be empty");
       return;
     }
 
     if (!user) {
-      toast({
-        className:
-         'fixed top-4 left-4 md:top-4 md:left-1/2 md:transform md:-translate-x-1/2 flex md:max-w-[420px] bg-red-500 text-white',
-        title: "Error",
-        description: "You must be logged in to add tasks",
-        variant: "destructive",
-      })
+      toast.error("You must be logged in to add tasks");
       return;
     }
 
@@ -74,21 +61,10 @@ export default function useTask() {
       // Reset form input
       (e.target as HTMLFormElement).reset();
 
-      toast({
-        className:
-         'fixed top-4 left-4 md:top-4 md:left-1/2 md:transform md:-translate-x-1/2 flex md:max-w-[420px] bg-green-500 text-white',
-        title: "Added Successfully",
-        description: "Your task has been added.",
-      })
+      toast.success("Your task has been added.");
     } catch (error) {
       console.error('Error adding task:', error);
-      toast({
-        className:
-         'fixed top-4 left-4 md:top-4 md:left-1/2 md:transform md:-translate-x-1/2 flex md:max-w-[420px] bg-red-500 text-white',
-        title: "Error",
-        description: "Failed to add task. Please try again.",
-        variant: "destructive",
-      })
+      toast.error("Failed to add task. Please try again.");
     } finally {
       setIsAdding(false);
     }
@@ -99,8 +75,10 @@ export default function useTask() {
     try {
       setIsDeleting(true);
       await deleteDoc(doc(db, "task", id));
+      toast.success("Task deleted successfully.");
     } catch (error) {
       console.error('Error deleting task:', error);
+      toast.error("Failed to delete task. Please try again.");
     } finally {
       setIsDeleting(false);
     }
@@ -120,13 +98,7 @@ export default function useTask() {
   // Update Task Title
   const handleUpdateTask = async (id: string, title: string) => {
     if (!title) {
-      toast({
-        className:
-         'fixed top-4 left-4 md:top-4 md:left-1/2 md:transform md:-translate-x-1/2 flex md:max-w-[420px] bg-red-500 text-white',
-        title: "Error",
-        description: "Task cannot be empty",
-        variant: "destructive",
-      })
+      toast.error("Task cannot be empty");
       return;
     }
 
@@ -135,12 +107,7 @@ export default function useTask() {
       await updateDoc(taskRef, { task: title });
       updateTask(id, { task: title });
       
-      toast({
-        className:
-       'fixed top-4 left-4 md:top-4 md:left-1/2 md:transform md:-translate-x-1/2 flex md:max-w-[420px] bg-green-500 text-white',
-        title: "Updated Successfully",
-        description: "Your task has been updated.",
-      })
+      toast.success("Your task has been updated.");
     } catch (error) {
       console.error('Error updating task title:', error);
     }

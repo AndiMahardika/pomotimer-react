@@ -1,18 +1,25 @@
-import { useToast } from "@/hooks/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { authSchema } from "../validation/auth.validation";
 import { z } from "zod";
 import { useNavigate } from "react-router-dom";
 import { loginWithEmailPassword } from "../service/api.login";
+import { toast } from "react-hot-toast";
+import useAuth from "@/hooks/useAuth";
 
 type FormValues = z.infer<typeof authSchema>;
 
 export default function useLogin() {
   const [loading, setLoading] = useState(false);
-  const { toast } = useToast()
   const navigate = useNavigate();
+  const { user, handleLoginWithGoogle } = useAuth();
+
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(authSchema),
@@ -22,6 +29,18 @@ export default function useLogin() {
     },
   });
 
+  const onGoogleLogin = async () => {
+    try {
+      setLoading(true);
+      await handleLoginWithGoogle();
+      toast.success("Welcome! Login with Google successful.");
+    } catch (error) {
+      toast.error(`Google login failed: ${error}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const onSubmit = async (data: FormValues) => {
     try {
       setLoading(true);
@@ -29,24 +48,11 @@ export default function useLogin() {
       const { error } = await loginWithEmailPassword(data.email, data.password);
 
       if (error) {
-        toast({
-          className:
-           'fixed top-4 left-0 md:top-4 md:left-1/2 md:transform md:-translate-x-1/2 flex md:max-w-[420px]',
-          title: "Login failed",
-          description: `${error}`,
-          variant: "destructive",
-        })
+        toast.error(`Login failed: ${error}`);
       } else {
-        toast({
-          className:
-           'fixed top-4 left-0 md:top-4 md:left-1/2 md:transform md:-translate-x-1/2 flex md:max-w-[420px] bg-green-500 text-white',
-          title: "Welcome Back",
-          description: "You have successfully logged in.",
-        })
-
+        toast.success("Welcome back! Login successful.");
         navigate("/");
       }
-
     } catch (error) {
       console.log(error);
     } finally {
@@ -54,5 +60,5 @@ export default function useLogin() {
     }
   };
 
-  return { form, onSubmit, loading }
+  return { form, onSubmit, onGoogleLogin, loading }
 }

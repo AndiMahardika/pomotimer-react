@@ -1,4 +1,3 @@
-import { useToast } from "@/hooks/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -8,9 +7,10 @@ import { signupWithEmailPassword } from "../service/api.signup";
 
 type FormValues = z.infer<typeof authSchema>;
 
+import { toast } from "react-hot-toast";
+
 export default function useSignup() {
   const [loading, setLoading] = useState(false);
-  const { toast } = useToast()
 
   const form = useForm<FormValues>({
     resolver: zodResolver(authSchema),
@@ -27,20 +27,9 @@ export default function useSignup() {
       const { data: user, error: errorSignUp } = await signupWithEmailPassword(data.email, data.password);
 
       if (errorSignUp) {
-        toast({
-          className:
-           'fixed top-4 left-0 md:top-4 md:left-1/2 md:transform md:-translate-x-1/2 flex md:max-w-[420px]',
-          title: "Signup failed",
-          description: `${errorSignUp}`,
-          variant: "destructive",
-        })
+        toast.error(`Signup failed: ${errorSignUp}`);
       } else if (user) {
-        toast({
-          className:
-           'fixed top-4 left-0 md:top-4 md:left-1/2 md:transform md:-translate-x-1/2 flex md:max-w-[420px] bg-green-500 text-white',
-          title: "Signup successful",
-          description: "You have successfully created an account.",
-        })
+        toast.success("Account created successfully!");
       }
     } catch (error) {
       console.error(error);
