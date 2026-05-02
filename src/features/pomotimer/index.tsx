@@ -5,7 +5,7 @@ import Task from "./components/task";
 
 export default function Pomotimer() {
   return (
-    <main className="bg-slate-700">
+    <main className="bg-slate-50">
       <section className="max-w-5xl mx-auto min-h-screen font-inter">
         <Navbar/>
         <section className="grid grid-cols-1 md:grid-cols-2 gap-x-2 h-[90vh] pb-1 px-3 space-y-2 md:space-y-0">
