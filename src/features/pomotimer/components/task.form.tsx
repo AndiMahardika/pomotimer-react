@@ -4,7 +4,7 @@ import { Loader2 } from "lucide-react";
 
 interface TaskFormProps {
   loading: boolean
-  handleAddTask: (e: React.FormEvent) => void
+  handleAddTask: (_e: React.FormEvent) => void
 }
 
 export default function TaskForm( { loading, handleAddTask }: TaskFormProps) {

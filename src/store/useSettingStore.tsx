@@ -7,12 +7,12 @@ interface SettingStore {
   longbreakduration: number;
   timerSound: string | null;
   isRunning: boolean;
-  setWorkduration: (workduration: number) => void;
-  setShortbreakduration: (shortbreakduration: number) => void;
-  setLongbreakduration: (longbreakduration: number) => void;
-  setTimerSound: (timerSound: string | null) => void;
-  setIsRunning: (isRunning: boolean) => void;
-  setAllSettings: (settings: {
+  setWorkduration: (_workduration: number) => void;
+  setShortbreakduration: (_shortbreakduration: number) => void;
+  setLongbreakduration: (_longbreakduration: number) => void;
+  setTimerSound: (_timerSound: string | null) => void;
+  setIsRunning: (_isRunning: boolean) => void;
+  setAllSettings: (_settings: {
     workduration: number;
     shortbreakduration: number;
     longbreakduration: number;

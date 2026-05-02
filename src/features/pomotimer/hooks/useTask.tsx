@@ -5,7 +5,6 @@ import {
   addDoc, 
   query, 
   where, 
-  getDocs, 
   deleteDoc, 
   doc, 
   updateDoc, 
@@ -20,10 +19,10 @@ import useTimerStore from '@/store/useTmerStore';
 import useSetting from './useSetting';
 
 export default function useTask() {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const { tasks, addTask, setTasks, deleteTask, updateTask, selectTask, unselectTask } = useTaskStore();
+  const { tasks, setTasks, updateTask, selectTask, unselectTask } = useTaskStore();
   const { user } = useUserStore();
   const { toast } = useToast()
   const { setWorkSession, setCurrentDuration, setIsRunning } = useTimerStore()
@@ -66,26 +65,6 @@ export default function useTask() {
       console.error('Error adding task:', error);
     } finally {
       setIsAdding(false);
-    }
-  };
-
-  // Fetch Tasks (Initial load, though we use onSnapshot below)
-  const fetchTasks = async () => {
-    if (!user) return;
-
-    try {
-      setIsLoading(true);
-      const q = query(collection(db, "task"), where("user_id", "==", user?.uid));
-      const querySnapshot = await getDocs(q);
-      const tasksData = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as Tasks[];
-      setTasks(tasksData);
-    } catch (error) {
-      console.error('Error fetching tasks:', error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -175,7 +154,7 @@ export default function useTask() {
         setCurrentDuration(workduration);
         // Find the task data for workSession
         const selectedTaskData = tasks.find(t => t.id === id);
-        // @ts-ignore
+        // @ts-expect-error - workSession property is added dynamically to task items from Firestore
         setWorkSession(selectedTaskData?.workSession ?? true);
         setIsRunning(false);
 

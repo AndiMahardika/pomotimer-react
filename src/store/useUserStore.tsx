@@ -4,7 +4,7 @@ import { persist, createJSONStorage } from "zustand/middleware";
 
 interface UserStore {
   user: User | null;
-  setUser: (user: User | null) => void;
+  setUser: (_user: User | null) => void;
   clearUser: () => void;
 }
 

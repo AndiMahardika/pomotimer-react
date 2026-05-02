@@ -12,7 +12,7 @@ interface TaskProps {
   data: Tasks;
   loading?: boolean;
   handleDeleteTask?: () => void;
-  handleUpdateTask?: (id: string, title: string) => void;
+  handleUpdateTask?: (_id: string, _title: string) => void;
 }
 
 export default function TaskItem({ data, loading, handleDeleteTask, handleUpdateTask }: TaskProps) {

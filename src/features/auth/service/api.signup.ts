@@ -12,7 +12,10 @@ export const signupWithEmailPassword = async (
       password,
     );
     return { data: userCredential.user, error: null };
-  } catch (error: any) {
-    return { data: null, error: error.message };
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return { data: null, error: error.message };
+    }
+    return { data: null, error: String(error) };
   }
 };

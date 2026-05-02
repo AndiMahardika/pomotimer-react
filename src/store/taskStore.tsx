@@ -5,11 +5,11 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 interface TaskStore {
   tasks: Tasks[];
   selectedTask: Tasks | null
-  addTask: (task: Tasks) => void;
-  updateTask: (taskId: string, updates: Partial<Tasks>) => void;
-  deleteTask: (taskId: string) => void;
-  setTasks: (tasks: Tasks[]) => void;
-  selectTask: (taskId: string) => void;
+  addTask: (_task: Tasks) => void;
+  updateTask: (_taskId: string, _updates: Partial<Tasks>) => void;
+  deleteTask: (_taskId: string) => void;
+  setTasks: (_tasks: Tasks[]) => void;
+  selectTask: (_taskId: string) => void;
   unselectTask: () => void;
   clearTasks: () => void;
 }
