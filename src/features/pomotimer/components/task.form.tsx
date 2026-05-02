@@ -18,7 +18,7 @@ export default function TaskForm( { loading, handleAddTask, onSuccess }: TaskFor
     <form className="grid gap-4 py-4" onSubmit={handleSubmit}>
       <div className="grid gap-2">
         <label htmlFor="task" className="text-sm font-medium">Task Title</label>
-        <Input id="task" type="text" name="task" placeholder="What are you working on?" className="bg-white" required />
+        <Input id="task" type="text" name="task" placeholder="What are you working on?" className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-400" required />
       </div>
       <Button
         type="submit"
