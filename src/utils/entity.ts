@@ -1,14 +1,15 @@
 export interface Tasks {
-  id: number;
-  created_at: string;
+  id?: string;
+  created_at?: string;
+  user_id?: string;
   task: string;
   is_selected: boolean;
   pomo_count: number;
 }
 
 export interface IUser {
-  id: number;
+  id?: string;
   name: string;
   email: string;
-  created_at: string;
+  created_at?: string;
 }

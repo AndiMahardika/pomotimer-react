@@ -1,10 +1,10 @@
-import { User } from "@supabase/supabase-js";
+import { User } from "firebase/auth";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
 interface UserStore {
   user: User | null;
-  setUser: (user: User | null) => void;
+  setUser: (_user: User | null) => void;
   clearUser: () => void;
 }
 

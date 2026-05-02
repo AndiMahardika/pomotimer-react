@@ -26,14 +26,14 @@ export default function useLogin() {
     try {
       setLoading(true);
 
-      const { data: _user, error } = await loginWithEmailPassword(data.email, data.password);
+      const { error } = await loginWithEmailPassword(data.email, data.password);
 
       if (error) {
         toast({
           className:
            'fixed top-4 left-0 md:top-4 md:left-1/2 md:transform md:-translate-x-1/2 flex md:max-w-[420px]',
           title: "Login failed",
-          description: `${error.message}`,
+          description: `${error}`,
           variant: "destructive",
         })
       } else {

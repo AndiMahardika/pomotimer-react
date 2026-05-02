@@ -3,11 +3,11 @@ import { createJSONStorage, persist } from "zustand/middleware";
 
 interface TimerStore {
   currentDuration: number;
-  setCurrentDuration: (duration: number) => void;
+  setCurrentDuration: (_duration: number) => void;
   workSession: boolean;
-  setWorkSession: (session: boolean) => void;
+  setWorkSession: (_session: boolean) => void;
   isRunning: boolean;
-  setIsRunning: (run: boolean) => void;
+  setIsRunning: (_run: boolean) => void;
 }
 
 const useTimerStore = create<TimerStore>()(

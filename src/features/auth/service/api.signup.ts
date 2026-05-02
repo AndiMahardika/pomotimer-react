@@ -1,18 +1,21 @@
-import { supabase } from "@/utils/supabase";
-const BASE_URL = import.meta.env.BASE_URL
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "@/utils/firebase";
 
-export const signupWithEmailPassword = async (email: string, password: string) => {
+export const signupWithEmailPassword = async (
+  email: string,
+  password: string,
+) => {
   try {
-    const { data, error } = await supabase.auth.signUp({
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
       email,
       password,
-      options: {
-        emailRedirectTo: `${BASE_URL}`,
-      },
-    });
-    if (error) throw error;
-    return { data, error };
-  } catch (error) {
-    return { data: null, error };
+    );
+    return { data: userCredential.user, error: null };
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return { data: null, error: error.message };
+    }
+    return { data: null, error: String(error) };
   }
-}
+};
